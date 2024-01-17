@@ -57,7 +57,7 @@ async def register(user: schemas.RegisterUser, db: Session = Depends(get_db)):
     <body style='background-color: #f5f5f5; width: 100%;font-family: Roboto, sans-serif; font-size: 14px;color: #525252; letter-spacing: 0.5px;'>
         <div style='max-width: 600px; padding: 30px; margin: auto;'>
             <div style='background-color: #fff; padding: 30px;'>
-                <img src='{baseURL}resources/images/logo.png' alt='logo' style='width:  250px;' />
+                <img src='{baseURL}resources/images/logo.png' alt='logo' style='width:200px;' />
             </div>
             <div style='padding-top: 20px;'>
                 <p>
@@ -75,9 +75,60 @@ async def register(user: schemas.RegisterUser, db: Session = Depends(get_db)):
     </html>
 """
 
-    await send_mail(user.email, "Password reset", html)
+    await send_mail(user.email, "Confirm your email", html)
     
     return new_uza
+
+
+# ***************RESEND CONFIRMATION EMAIL******************
+@router.post("/resend/{email}", status_code=status.HTTP_201_CREATED)
+async def resend(email: str, db: Session = Depends(get_db)):
+    email = email.lower()
+
+    query = db.query(models.User).filter(models.User.email == email).first()
+    if query:
+        verification_code = random.randint(100000, 999999)
+        fake_code = generate_unique_id(25)
+
+        query.verification_code = verification_code
+        db.commit()
+
+        # send welcome email
+        html = f"""\
+        <!DOCTYPE html>
+        <html lang='en'>
+        <head>
+            <meta charset='UTF-8'>
+            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+            <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap" rel="stylesheet">
+            <title>Labour Connect Hub</title>
+        </head>
+        <body style='background-color: #f5f5f5; width: 100%;font-family: Roboto, sans-serif; font-size: 14px;color: #525252; letter-spacing: 0.5px;'>
+            <div style='max-width: 600px; padding: 30px; margin: auto;'>
+                <div style='background-color: #fff; padding: 30px;'>
+                    <img src='{baseURL}resources/images/logo.png' alt='logo' style='width:200px;' />
+                </div>
+                <div style='padding-top: 20px;'>
+                    <p>
+                        Welcome to Labour Connect Hub, to get started click the link below to confirm your email.
+                    </p>
+                    <div style="padding: 20px 0;">
+                        <a style='background-color: #ffd7d7; padding: 10px 20px; width: fit-content;color: #d60505; text-decoration: none;' href="{baseURL}register/{email}/{verification_code}/{fake_code}">Confirm email</a>
+                    </div>
+                    <p>
+                        if you have any questions, please email us at support@labourch.com, we can answer questions about your account.
+                    </p>
+                </div>
+            </div>
+        </body>
+        </html>
+    """
+
+        await send_mail(email, "Confirm your email", html)
+        
+        return {"data": f"Email sent to {email}"}
+    else:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Email not found in our database")
 
 
 # ***************EMAIL CONFIRMATION******************
@@ -128,7 +179,6 @@ def update_personal_details(user: schemas.Personal, db: Session = Depends(get_db
     else:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     
-
 
 # ***************UPDATE PASSWORD*******************
 @router.post("/user/password/", status_code=status.HTTP_202_ACCEPTED)

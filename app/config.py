@@ -7,8 +7,6 @@ class Settings(BaseSettings):
     db_password: str
     db_port: str
     secret_key: str
-    algorithm: str
-    access_token_expire_minutes: int
     mail_password: str
 
     

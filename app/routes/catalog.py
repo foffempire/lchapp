@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from typing import List
 import shutil
 import os
+from ..utils import baseURL
 
 
 
@@ -50,20 +51,20 @@ def upload_catalog_image(files: List[UploadFile] = File(...) ):
 
     #convert list to strings
     # initialize an empty string
-    string_output = ""
+    # string_output = ""
  
-    # traverse in the string
-    for ele in uploaded_images:
-        string_output += f"{ele},"
+    # # traverse in the string
+    # for ele in uploaded_images:
+    #     string_output += f"{ele},"
     
 
-    #remove the last comma
-    string_output = string_output[:-1]
+    # #remove the last comma
+    # string_output = string_output[:-1]
 
-    # return string
-    return string_output
+    # # return string
+    # return string_output
 
-    # return uploaded_images
+    return uploaded_images
  
  
 # ***************ADD CATALOG*******************
@@ -75,11 +76,18 @@ def add_catalog(catalog: schemas.Catalog, db: Session = Depends(get_db), current
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Business not found")
     
     biz_id = query.first().id
-    insert = models.Catalog(business_id = biz_id, **catalog.model_dump())
+    insert = models.Catalog(business_id = biz_id, name = catalog.name, price = catalog.price, description = catalog.description)
     db.add(insert)
     db.commit()
     db.refresh(insert)
+
+    for files in catalog.images:
+        add = models.CatalogImg(catalog_id = insert.id, image = files)
+        db.add(add)
+        db.commit()
+
     return insert
+
 
 
 # ***************UPDATE CATALOG*******************
@@ -103,6 +111,7 @@ def update_catalog(id: int, catalog: schemas.Catalog, db: Session = Depends(get_
 @router.delete('/catalog/{id}')
 def delete_catalog(id: int, db: Session = Depends(get_db), current_user: str = Depends(oauth2.get_current_user)):
     query = db.query(models.Catalog).filter(models.Catalog.id == id)
+    queryImg = db.query(models.CatalogImg).filter(models.CatalogImg.id == id)
     if not query.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Catalog not found")
 
@@ -112,7 +121,9 @@ def delete_catalog(id: int, db: Session = Depends(get_db), current_user: str = D
 
 
     query.delete(synchronize_session=False)
+    queryImg.delete(synchronize_session=False)
     db.commit()
+
     return{"data":"deleted"}
 
 
@@ -125,9 +136,9 @@ def get_catalog(catalog_id: int, db: Session = Depends(get_db)):
     return query
 
 
-@router.get('/explore_catalogs/', status_code=status.HTTP_200_OK, response_model=List[schemas.CatalogResponse])
+@router.get('/explore_catalogs/', status_code=status.HTTP_200_OK, response_model=List[schemas.CatalogExplore])
 def explore_catalogs(db: Session = Depends(get_db)):
-    query = db.query(models.Catalog).order_by(func.random()).limit(50)
+    query = db.query(models.CatalogImg).order_by(func.random()).limit(50)
     if not query:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No catalogs found")   
     return query

@@ -1,10 +1,11 @@
 import smtplib, ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from .config import settings
 
 
 MAIL_USERNAME = 'mo6014245571@gmail.com'
-MAIL_PASSWORD = 'lnuu meou kcvs nhyk'
+MAIL_PASSWORD = settings.mail_password
 MAIL_FROM = "mo6014245571@gmail.com"
 MAIL_PORT = 587
 MAIL_SERVER = 'smtp.gmail.com'

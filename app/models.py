@@ -93,7 +93,16 @@ class Catalog(Base):
     name = Column(String, nullable=False)
     price = Column(Float, nullable=True)
     description = Column(Text, nullable=True)
-    images = Column(String, nullable=False)
+    
+    images = relationship("CatalogImg")
+
+
+class CatalogImg(Base):
+    __tablename__ = "catalog_img"
+
+    id = Column(Integer, primary_key=True, index=True)
+    catalog_id = Column(Integer, ForeignKey("catalog.id", ondelete="CASCADE"), nullable=False)
+    image = Column(String, nullable=False)
 
    
 class Certifications(Base):
