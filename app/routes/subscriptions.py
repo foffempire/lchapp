@@ -10,16 +10,6 @@ router = APIRouter(
     tags=['subscription']
 )
 
-# def auto_deact(db:Session):
-#     currentday: datetime = datetime.now(timezone.utc)
-#     query = db.query(models.Subscription).filter(models.Subscription.is_active == 'true')
-
-#     for i in query:
-#         if (i.end_date - currentday ).days < 1:
-#             i.is_active = False
-#             db.commit()            
-
-
 
 # ***************ADD SUBSCRIPTION******************
 @router.post("/monthly_sub/{business_id}", status_code=status.HTTP_200_OK, response_model=schemas.Subscription)

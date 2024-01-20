@@ -28,7 +28,6 @@ def add_business(biz: schemas.BusinessAbout, db: Session = Depends(get_db), curr
         db.commit()
         return query.first()
     else:
-        # insert = models.Business(owner_id = current_user.id, name = biz.name, about = biz.about)
         insert = models.Business(owner_id = current_user.id, bid = random, tag = itag, **biz.model_dump())
         db.add(insert)
         db.commit()
@@ -171,9 +170,17 @@ def get_single_business( id: int, db: Session = Depends(get_db)):
 
 
 # ***************GET ALL BUSINESSES*******************
-@router.get("/businesses/{limit}", status_code=status.HTTP_200_OK, response_model=List[schemas.Business])
-def get_all_businesses(limit: int, db: Session = Depends(get_db)):
-    results =  db.query(models.Business).limit(limit).all()
+@router.get("/businesses", status_code=status.HTTP_200_OK, response_model=List[schemas.Business])
+def get_all_businesses(db: Session = Depends(get_db), limit: int = 50, skip: int = 0):
+
+    # query all businesses
+    results =  db.query(models.Business).limit(limit).offset(skip).all()
+
+    """
+    # query only subscribed businesses (needed when there area subscribers)
+    results =  db.query(models.Business).join(models.Subscription, models.Business.id == models.Subscription.business_id).filter(models.Subscription.is_active == True).limit(limit).offset(skip).all()
+    """
+
     if not results:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=" NO business found.")
     
@@ -183,12 +190,15 @@ def get_all_businesses(limit: int, db: Session = Depends(get_db)):
 
 # ***************SEARCH/QUERY BUSINESSES*******************
 @router.get("/search", status_code=status.HTTP_200_OK, response_model=List[schemas.Business])
-def query_businesses(db: Session = Depends(get_db), search: str = 'engineer', limit: int  = 50, location: str = ''):
+def query_businesses(db: Session = Depends(get_db), search: str = '', limit: int  = 50, skip:int = 0, location: str = ''):
 
+
+    results =  db.query(models.Business).filter(func.lower(models.Business.tag).like('%' +func.lower(search) + '%'), func.lower(models.Business.city).like('%' +func.lower(location) + '%')).limit(limit=limit).offset(skip).all()
   
-    results =  db.query(models.Business).filter(func.lower(models.Business.tag).like('%' +func.lower(search) + '%'), func.lower(models.Business.city).like('%' +func.lower(location) + '%')).limit(limit=limit).all()
 
-    # results =  db.query(models.Business).filter(or_(func.lower(models.Business.tag).like('%' +func.lower(search) + '%'), func.lower(models.Business.city).like('%' +func.lower(location) + '%'))).limit(limit=limit).all()
+    """
+    results =  db.query(models.Business).filter(or_(func.lower(models.Business.tag).like('%' +func.lower(search) + '%'), func.lower(models.Business.city).like('%' +func.lower(location) + '%'))).limit(limit=limit).offset(skip).all()
+    """
     
     if not results:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Business no found.")
