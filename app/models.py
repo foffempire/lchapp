@@ -1,8 +1,9 @@
 from .database import Base
-from sqlalchemy import Column, String, Integer, Boolean, ForeignKey, Text, Float
+from sqlalchemy import Column, String, Integer, Boolean, ForeignKey, Text, Float, Date, DATE
 from sqlalchemy.sql.sqltypes import TIMESTAMP
-from sqlalchemy.sql.expression import text
+from sqlalchemy.sql.expression import text, func
 from sqlalchemy.orm import relationship
+from datetime import timedelta, datetime, timezone
 
 
 class User(Base):
@@ -177,6 +178,8 @@ class Subscription(Base):
     is_active = Column(Boolean, default=True, nullable=False)
     start_date = Column(TIMESTAMP(timezone=True), nullable=False)
     end_date = Column(TIMESTAMP(timezone=True), nullable=False)
+    price = Column(Float, nullable=False)
+    date_created = Column(Date, server_default=text("now()"), nullable=False)
 
 
 class SubHistory(Base):
@@ -186,4 +189,15 @@ class SubHistory(Base):
     business_id = Column(Integer, ForeignKey("business.id", ondelete="CASCADE"), nullable=False)
     start_date = Column(TIMESTAMP(timezone=True), nullable=False)
     end_date = Column(TIMESTAMP(timezone=True), nullable=False)
+    price = Column(Float, nullable=False)
+    date_created = Column(Date, server_default=text("now()"), nullable=False)
+
+
+class SubPrice(Base):
+    __tablename__ = "sub_price"
+
+    id = Column(Integer, primary_key=True, index=True)
+    duration = Column(String, nullable=False)
+    price = Column(Float, nullable=False)
+    date_updated = Column(TIMESTAMP(timezone=False), server_default=text("now()"), nullable=False)
 
