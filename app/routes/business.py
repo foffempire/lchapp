@@ -7,10 +7,16 @@ from typing import List
 from fastapi.responses import JSONResponse
 import shutil
 import os
+from ..utils import baseURL
+
 
 router = APIRouter(
     tags=['business']
 )
+
+
+# bannerImgUrl = f"{baseURL}uploads/banner/"
+bannerImgUrl = "uploads/banner/"
 
 # ***************ADD/UPDATE BUSINESS NAME/ABOUT*******************
 @router.post("/business", status_code=status.HTTP_201_CREATED, response_model=schemas.Business)
@@ -54,7 +60,7 @@ def upload_banner_image(file: UploadFile ):
         with open(os.path.join(UPLOAD_DIRECTORY+filename), "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
         
-        return {"filename" : filename}
+        return {"filename" : bannerImgUrl+filename}
     
     except Exception as e:
         return JSONResponse(content={"message": f"Failed to upload file: {str(e)}"}, status_code=500)

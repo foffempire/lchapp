@@ -3,7 +3,7 @@ from .. import models, schemas, oauth2, utils
 from ..database import engine, get_db
 from sqlalchemy.orm import Session 
 from typing import List
-
+from ..utils import baseURL
 from fastapi.responses import JSONResponse
 import shutil
 import os
@@ -14,6 +14,9 @@ import uuid
 router = APIRouter(
     tags=['certification']
 )
+
+# certImgUrl = f"{baseURL}uploads/certificate/"
+certImgUrl = "uploads/certificate/"
 
 def verify_owner(cid, uid, db):
     
@@ -42,7 +45,7 @@ def upload_certificate_image(file: UploadFile ):
         with open(os.path.join(UPLOAD_DIRECTORY+filename), "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
         
-        return {"filename" : filename}
+        return {"filename" : certImgUrl+filename}
     
     except Exception as e:
         return JSONResponse(content={"message": f"Failed to upload file: {str(e)}"}, status_code=500)

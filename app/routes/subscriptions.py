@@ -3,6 +3,8 @@ from .. import models, schemas
 from ..database import get_db
 from sqlalchemy.orm import Session 
 from datetime import timedelta, datetime, timezone, date
+from .. import oauth2
+from typing import List
 
 
 
@@ -118,8 +120,11 @@ def renew_yearly_sub(business_id,  db, price):
 
 
 # ***************ADD SUBSCRIPTION******************
-@router.post("/monthly_sub/{business_id}", status_code=status.HTTP_200_OK)
-def monthly_sub(business_id: int, db: Session = Depends(get_db)):
+@router.post("/monthly_sub/", status_code=status.HTTP_200_OK)
+def monthly_sub( db: Session = Depends(get_db), current_user: str = Depends(oauth2.get_current_user)):
+
+    getbizid = db.query(models.Business).filter(models.Business.owner_id == current_user.id).first()
+    business_id = getbizid.id
 
     price = subscription_price("monthly", db)
 
@@ -160,8 +165,11 @@ def monthly_sub(business_id: int, db: Session = Depends(get_db)):
         return insert
 
 
-@router.post("/six_month_sub/{business_id}", status_code=status.HTTP_200_OK)
-def six_month_sub(business_id: int, db: Session = Depends(get_db)):
+@router.post("/six_month_sub/", status_code=status.HTTP_200_OK)
+def six_month_sub(db: Session = Depends(get_db), current_user: str = Depends(oauth2.get_current_user)):
+
+    getbizid = db.query(models.Business).filter(models.Business.owner_id == current_user.id).first()
+    business_id = getbizid.id
 
     price = subscription_price("six_month", db)
 
@@ -200,8 +208,11 @@ def six_month_sub(business_id: int, db: Session = Depends(get_db)):
         return insert
 
 
-@router.post("/yearly_sub/{business_id}", status_code=status.HTTP_200_OK)
-def yearly_sub(business_id: int, db: Session = Depends(get_db)):
+@router.post("/yearly_sub/", status_code=status.HTTP_200_OK)
+def yearly_sub(db: Session = Depends(get_db), current_user: str = Depends(oauth2.get_current_user)):
+
+    getbizid = db.query(models.Business).filter(models.Business.owner_id == current_user.id).first()
+    business_id = getbizid.id
 
     price = subscription_price("yearly", db)
 
@@ -242,3 +253,10 @@ def yearly_sub(business_id: int, db: Session = Depends(get_db)):
 
 
 
+# ***************GET SUBSCRIPTION PRICE*******************
+@router.get("/get_subprices/", status_code=status.HTTP_200_OK, response_model=List[schemas.SubPrice])
+def get_subprices( db: Session = Depends(get_db) ):
+
+    query =  db.query(models.SubPrice).all()
+    
+    return query

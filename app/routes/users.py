@@ -13,7 +13,8 @@ router = APIRouter(
     tags=["User"]
 )
 
-
+# userImgUrl = f"{baseURL}uploads/users/"
+userImgUrl = "uploads/users/"
 
 @router.get("/")
 def root():
@@ -228,7 +229,7 @@ def upload_user_image(file: UploadFile ):
         with open(os.path.join(UPLOAD_DIRECTORY+filename), "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
         
-        return {"filename" : filename}
+        return {"filename" : userImgUrl+filename}
     
     except Exception as e:
         return JSONResponse(content={"message": f"Failed to upload file: {str(e)}"}, status_code=500)

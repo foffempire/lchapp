@@ -195,7 +195,10 @@ class SubHistory(BaseModel):
     start_date: datetime
     end_date: datetime
 
-
+class SubPrice(BaseModel):
+    duration: str
+    price: float
+    
 #************ BUSINESS SCHEMAS ******************
 
 class Business(BaseModel):

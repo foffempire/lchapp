@@ -11,18 +11,19 @@ router = APIRouter(
 
 
 #get all users
-@router.get("/admin/users", status_code=status.HTTP_200_OK, response_model=List[schemas_admin.UserResponse])
+@router.get("/admin/users/", status_code=status.HTTP_200_OK, response_model=List[schemas_admin.UserResponse])
 def get_users(db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
     uza =  db.query(models.User).all()
     return uza
 
 
-@router.get("/admin/countusers", status_code=status.HTTP_200_OK)
+@router.get("/admin/countusers/", status_code=status.HTTP_200_OK)
 # def count_users(db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
 def count_users(db: Session = Depends(get_db)):
     results =  db.query(func.count(models.User.id).label("total_uza")).scalar()
     if not results:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=" No Users found.")
     
+
     return results
 

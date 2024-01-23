@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends, status
 from .. import models, schemas_admin, oauth2_admin
 from ..database import get_db
 from sqlalchemy.orm import Session
-from sqlalchemy import func
+from sqlalchemy import func, desc
 from typing import List
 from datetime import timedelta, datetime, timezone, date
 
@@ -61,6 +61,15 @@ def add_subprices( data: schemas_admin.SubPrice, db: Session = Depends(get_db) )
         return {"data": "success"}
 
 
+# ***************GET SUBSCRIPTION PRICE*******************
+@router.get("/admin/get_subprices/", status_code=status.HTTP_200_OK, response_model=List[schemas_admin.SubPrice])
+def get_subprices( db: Session = Depends(get_db) ):
+
+    query =  db.query(models.SubPrice).order_by(models.SubPrice.id)
+    
+    return query
+
+
 # ***************GET REPORT*******************
 @router.post("/admin/report/", status_code=status.HTTP_200_OK)
 def sub_report(startdate: date, enddate: date, db: Session = Depends(get_db)):
@@ -85,7 +94,7 @@ def sub_amt_report(startdate: date, enddate: date, db: Session = Depends(get_db)
 
 
 # ***************LAST DAY REPORT*******************
-@router.post("/admin/reportlastday/", status_code=status.HTTP_200_OK)
+@router.get("/admin/reportlastday/", status_code=status.HTTP_200_OK)
 def day_amt_report(db: Session = Depends(get_db)):
     enddate = date.today() 
     startdate = enddate - timedelta(days=1)
@@ -100,7 +109,7 @@ def day_amt_report(db: Session = Depends(get_db)):
 
 
 # ***************LAST WEEK REPORT*******************
-@router.post("/admin/reportlastweek/", status_code=status.HTTP_200_OK)
+@router.get("/admin/reportlastweek/", status_code=status.HTTP_200_OK)
 def week_amt_report(db: Session = Depends(get_db)):
     enddate = date.today() 
     startdate = enddate - timedelta(days=7)
@@ -115,7 +124,7 @@ def week_amt_report(db: Session = Depends(get_db)):
 
 
 # ***************LAST MONTH REPORT*******************
-@router.post("/admin/reportlastmonth/", status_code=status.HTTP_200_OK)
+@router.get("/admin/reportlastmonth/", status_code=status.HTTP_200_OK)
 def month_amt_report(db: Session = Depends(get_db)):
     enddate = date.today() 
     startdate = enddate - timedelta(days=30)
@@ -125,12 +134,12 @@ def month_amt_report(db: Session = Depends(get_db)):
     sum = 0
     for biz in query:
         sum = sum + biz.price
-
+    
     return sum
 
 
 # ***************LAST YEAR REPORT*******************
-@router.post("/admin/reportlastyear/", status_code=status.HTTP_200_OK)
+@router.get("/admin/reportlastyear/", status_code=status.HTTP_200_OK)
 def year_amt_report(db: Session = Depends(get_db)):
     enddate = date.today() 
     startdate = enddate - timedelta(days=365)

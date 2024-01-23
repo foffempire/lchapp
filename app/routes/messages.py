@@ -8,12 +8,15 @@ from ..utils import generate_unique_id
 from fastapi.responses import JSONResponse
 import shutil
 import os
-import uuid
+from ..utils import baseURL
 from datetime import datetime
 
 router = APIRouter(
     tags=['messages']
 )
+
+# msgImgUrl = f"{baseURL}uploads/messages/"
+msgImgUrl = "uploads/messages/"
 
 def verify_owner(conversation_id, user_id, db):    
     msg = db.query(models.Conversations).filter(models.Conversations.id == conversation_id).first()
@@ -45,7 +48,7 @@ def upload_message_image(file: UploadFile ):
         with open(os.path.join(UPLOAD_DIRECTORY+filename), "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
         
-        return {"filename" : filename}
+        return {"filename" : msgImgUrl+filename}
     
     except Exception as e:
         return JSONResponse(content={"message": f"Failed to upload file: {str(e)}"}, status_code=500)
