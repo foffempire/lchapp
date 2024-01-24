@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends, status, UploadFile
+from fastapi import APIRouter, HTTPException, Depends, status, UploadFile, File
 from .. import models, schemas_admin, utils, oauth2_admin
 from ..database import get_db
 from sqlalchemy.orm import Session 
@@ -13,7 +13,7 @@ router = APIRouter(
 )
 # ***************UPLOAD CATEGORY IMAGE*******************
 @router.post("/admin_category/upload/")
-def upload_category_image(file: UploadFile ):
+def upload_category_image(file: UploadFile):
 
     # Define the directory to save uploaded images
     UPLOAD_DIRECTORY = "uploads/category/"
@@ -55,7 +55,8 @@ def add_category(cat: schemas_admin.Category, db: Session = Depends(get_db)):
 
 # ***************DELETE CATEGORY*******************
 @router.delete("/admin_category/{id}", status_code=status.HTTP_200_OK)
-def delete_category(id: int, db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
+# def delete_category(id: int, db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
+def delete_category(id: int, db: Session = Depends(get_db)):
     stmt = db.query(models.Category).filter(models.Category.id == id)
     if stmt.first() == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'not found')

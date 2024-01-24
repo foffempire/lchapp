@@ -84,7 +84,7 @@ def add_catalog(catalog: schemas.Catalog, db: Session = Depends(get_db), current
     db.refresh(insert)
 
     for files in catalog.images:
-        add = models.CatalogImg(catalog_id = insert.id, image = files)
+        add = models.CatalogImg(catalog_id = insert.id, business_id = biz_id, image = files)
         db.add(add)
         db.commit()
 
