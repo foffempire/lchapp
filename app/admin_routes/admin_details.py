@@ -12,7 +12,7 @@ router = APIRouter(
 
 # ***************REGISTER USER******************
 @router.post("/admin/register", status_code=status.HTTP_201_CREATED, response_model=schemas_admin.AdminOut)
-async def register(user: schemas_admin.RegisterAdminUser, db: Session = Depends(get_db)):
+async def register(user: schemas_admin.RegisterAdminUser, db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
     user.username = user.username.lower()
     #username exist
     username_exist = db.query(models.Admin).filter(models.Admin.username == user.username).first()
@@ -29,7 +29,7 @@ async def register(user: schemas_admin.RegisterAdminUser, db: Session = Depends(
 
 
 # ***************PERSONAL DETAILS*******************
-@router.post("/admin/user/", status_code=status.HTTP_201_CREATED, response_model=schemas_admin.AdminOut)
+@router.post("/admin/me/", status_code=status.HTTP_201_CREATED, response_model=schemas_admin.AdminOut)
 def update_details(user: schemas_admin.Personal, db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
     query = db.query(models.Admin).filter(models.Admin.username == admin_user.username)
     
@@ -45,7 +45,7 @@ def update_details(user: schemas_admin.Personal, db: Session = Depends(get_db), 
 
 
 # ***************UPDATE PASSWORD*******************
-@router.post("/admin/user/password/", status_code=status.HTTP_202_ACCEPTED)
+@router.post("/admin/me/password/", status_code=status.HTTP_202_ACCEPTED)
 def update_password(user: schemas_admin.Password, db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
 
     user.password = get_password_hash(user.password)
@@ -69,7 +69,7 @@ def update_password(user: schemas_admin.Password, db: Session = Depends(get_db),
 
 
 # ***************GET USER DETAILS*******************
-@router.get("/admin/user/", status_code=status.HTTP_200_OK, response_model=schemas_admin.AdminOut)
+@router.get("/admin/me/", status_code=status.HTTP_200_OK, response_model=schemas_admin.AdminOut)
 def get_details(db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
     results =  db.query(models.Admin).filter(admin_user.username == models.Admin.username).first()
     if not results:

@@ -15,8 +15,7 @@ router = APIRouter(
 
 # ***************GET SINGLE BUSINESSES*******************
 @router.get("/admin/business/{id}", status_code=status.HTTP_200_OK, response_model=schemas_admin.Business)
-# def get_single_business( id: int, db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
-def get_single_business( id: int, db: Session = Depends(get_db)):
+def get_single_business( id: int, db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
     results =  db.query(models.Business).filter(models.Business.id == id).first()
     if not results:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Business no found.")
@@ -26,7 +25,7 @@ def get_single_business( id: int, db: Session = Depends(get_db)):
 
 # ***************GET ALL BUSINESSES*******************
 @router.get("/admin/businesses/", status_code=status.HTTP_200_OK, response_model=List[schemas_admin.Business])
-def get_all_businesses(db: Session = Depends(get_db)):
+def get_all_businesses(db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
 
     # query all businesses
     results =  db.query(models.Business).all()
@@ -39,7 +38,7 @@ def get_all_businesses(db: Session = Depends(get_db)):
 
 # ***************GET SUBSCRIBED BUSINESSES*******************
 @router.get("/admin/subscribed_businesses/", status_code=status.HTTP_200_OK, response_model=List[schemas_admin.Business])
-def get_all_subscribed_businesses(db: Session = Depends(get_db)):
+def get_all_subscribed_businesses(db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
 
     
     # query only subscribed businesses
@@ -67,8 +66,7 @@ def count_businesses(db: Session = Depends(get_db)):
 
 # ***************COUNT SUBSCRIBED BUSINESSES*******************
 @router.get("/admin/count_subscribed_businesses/", status_code=status.HTTP_200_OK)
-def count_subscribed_businesses(db: Session = Depends(get_db)):
-# def count_businesses(db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
+def count_businesses(db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
     
 
     results = db.query(models.Business).join(models.Subscription, models.Business.id == models.Subscription.business_id).filter(models.Subscription.is_active == True).all()

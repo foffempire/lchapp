@@ -106,6 +106,7 @@ class CatalogImg(BaseModel):
     image: str
 
 class CatalogExplore(BaseModel):
+    business_id: int
     catalog_id: int
     image: str
 

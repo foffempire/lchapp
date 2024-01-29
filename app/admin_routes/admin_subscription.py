@@ -24,7 +24,7 @@ def get_sub_history( id: int, db: Session = Depends(get_db)):
 
 # let frontend call the endpoint to run daily at 00:00
 @router.post("/admin/deactivate_sub/}", status_code=status.HTTP_200_OK)
-def deactivate_expired_subsription(db:Session = Depends(get_db)):
+def deactivate_expired_subsription(db:Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
     currentday: datetime = datetime.now(timezone.utc)
     query = db.query(models.Subscription).filter(models.Subscription.is_active == 'true')
 
@@ -38,7 +38,7 @@ def deactivate_expired_subsription(db:Session = Depends(get_db)):
 
 # ***************SUBSCRIPTION DURATION*******************
 @router.get("/admin/subduration/", status_code=status.HTTP_200_OK)
-def get_sub_duration():
+def get_sub_duration(admin_user: str = Depends(oauth2_admin.get_admin_user)):
     return {"monthly", "quaterly", "six_month", "yearly"}
 
 
@@ -63,7 +63,7 @@ def add_subprices( data: schemas_admin.SubPrice, db: Session = Depends(get_db) )
 
 # ***************GET SUBSCRIPTION PRICE*******************
 @router.get("/admin/get_subprices/", status_code=status.HTTP_200_OK, response_model=List[schemas_admin.SubPrice])
-def get_subprices( db: Session = Depends(get_db) ):
+def get_subprices( db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user) ):
 
     query =  db.query(models.SubPrice).order_by(models.SubPrice.id)
     
@@ -72,7 +72,7 @@ def get_subprices( db: Session = Depends(get_db) ):
 
 # ***************GET REPORT*******************
 @router.post("/admin/report/", status_code=status.HTTP_200_OK)
-def sub_report(startdate: date, enddate: date, db: Session = Depends(get_db)):
+def sub_report(startdate: date, enddate: date, db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
     
     #date format - YYYY-MM-DD
     query = db.query(models.SubHistory).filter(models.SubHistory.date_created.between(startdate, enddate)).all()
@@ -80,7 +80,7 @@ def sub_report(startdate: date, enddate: date, db: Session = Depends(get_db)):
     return query
 
 @router.post("/admin/reportamt/", status_code=status.HTTP_200_OK)
-def sub_amt_report(startdate: date, enddate: date, db: Session = Depends(get_db)):
+def sub_amt_report(startdate: date, enddate: date, db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
     
     #date format - YYYY-MM-DD
     query = db.query(models.SubHistory).filter(models.SubHistory.date_created.between(startdate, enddate)).all()
@@ -95,7 +95,7 @@ def sub_amt_report(startdate: date, enddate: date, db: Session = Depends(get_db)
 
 # ***************LAST DAY REPORT*******************
 @router.get("/admin/reportlastday/", status_code=status.HTTP_200_OK)
-def day_amt_report(db: Session = Depends(get_db)):
+def day_amt_report(db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
     enddate = date.today() 
     startdate = enddate - timedelta(days=1)
     #date format - YYYY-MM-DD
@@ -110,7 +110,7 @@ def day_amt_report(db: Session = Depends(get_db)):
 
 # ***************LAST WEEK REPORT*******************
 @router.get("/admin/reportlastweek/", status_code=status.HTTP_200_OK)
-def week_amt_report(db: Session = Depends(get_db)):
+def week_amt_report(db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
     enddate = date.today() 
     startdate = enddate - timedelta(days=7)
     #date format - YYYY-MM-DD
