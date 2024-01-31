@@ -12,7 +12,7 @@ router = APIRouter(
 
 # ***************REGISTER USER******************
 @router.post("/admin/register", status_code=status.HTTP_201_CREATED, response_model=schemas_admin.AdminOut)
-async def register(user: schemas_admin.RegisterAdminUser, db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
+async def register(user: schemas_admin.RegisterAdminUser, db: Session = Depends(get_db)):
     user.username = user.username.lower()
     #username exist
     username_exist = db.query(models.Admin).filter(models.Admin.username == user.username).first()

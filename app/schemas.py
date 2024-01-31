@@ -100,22 +100,23 @@ class Catalog(BaseModel):
     name: str
     price: Optional[float] 
     description: Optional[str]
-    images: List[str]
+    image: str
 
 class CatalogImg(BaseModel):
     image: str
 
-class CatalogExplore(BaseModel):
-    business_id: int
-    catalog_id: int
-    image: str
+# class CatalogExplore(BaseModel):
+#     business_id: int
+#     catalog_id: int
+#     image: str
 
 class CatalogResponse(BaseModel):
     id: int
+    business_id: int
     name: str
     price: Optional[float] 
     description: Optional[str]
-    images: List[CatalogImg]
+    image: str
 
 
 #************ CERTIFICATION SCHEMAs ******************

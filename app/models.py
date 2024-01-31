@@ -96,6 +96,7 @@ class Catalog(Base):
     business_id = Column(Integer, ForeignKey("business.id", ondelete="CASCADE"), nullable=False)
     name = Column(String, nullable=False)
     price = Column(Float, nullable=True)
+    image = Column(String, nullable=False)
     description = Column(Text, nullable=True)
     
     images = relationship("CatalogImg")
