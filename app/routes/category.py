@@ -1,12 +1,8 @@
-from fastapi import APIRouter, HTTPException, Depends, status, UploadFile
-from .. import models, schemas, utils
+from fastapi import APIRouter, HTTPException, Depends, status
+from .. import models, schemas
 from ..database import get_db
 from sqlalchemy.orm import Session 
 from typing import List
-from fastapi.responses import JSONResponse
-import shutil
-import os
-import uuid
 
 
 router = APIRouter(
@@ -22,6 +18,7 @@ def get_all_category(db: Session = Depends(get_db)):
     return category
 
 
+"""
 # ***************GET PARENT CATEGORY*******************
 @router.get("/category/main", status_code=status.HTTP_200_OK, response_model=List[schemas.CategoryResponse])
 def get_parent_category(db: Session = Depends(get_db)):
@@ -38,3 +35,5 @@ def get_sub_category(parent_id: int, db: Session = Depends(get_db)):
     if not category:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No category found!")
     return category
+
+"""

@@ -124,14 +124,14 @@ def renew_yearly_sub(business_id,  db, price):
 def monthly_sub( db: Session = Depends(get_db), current_user: str = Depends(oauth2.get_current_user)):
 
     getbizid = db.query(models.Business).filter(models.Business.owner_id == current_user.id).first()
-    business_id = getbizid.id
-
+    
     price = subscription_price("monthly", db)
 
     #check if business exist
-    query = db.query(models.Business).filter(models.Business.id == business_id)
-    if not query.first():
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No business with id of {business_id} found")
+    if not getbizid:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Create a business to get started")
+
+    business_id = getbizid.id
 
     # check if there's an expired subscription
     expire = db.query(models.Subscription).filter(models.Subscription.business_id == business_id, models.Subscription.is_active == 'false' )
@@ -169,14 +169,16 @@ def monthly_sub( db: Session = Depends(get_db), current_user: str = Depends(oaut
 def six_month_sub(db: Session = Depends(get_db), current_user: str = Depends(oauth2.get_current_user)):
 
     getbizid = db.query(models.Business).filter(models.Business.owner_id == current_user.id).first()
-    business_id = getbizid.id
-
+    
     price = subscription_price("six_month", db)
 
     #check if business exist
-    query = db.query(models.Business).filter(models.Business.id == business_id)
-    if not query.first():
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No business with id of {business_id} found")
+    if not getbizid:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Create a business to get started")
+
+
+    business_id = getbizid.id
+
 
     # check if there's an expired subscription
     expire = db.query(models.Subscription).filter(models.Subscription.business_id == business_id, models.Subscription.is_active == 'false' )
@@ -212,14 +214,14 @@ def six_month_sub(db: Session = Depends(get_db), current_user: str = Depends(oau
 def yearly_sub(db: Session = Depends(get_db), current_user: str = Depends(oauth2.get_current_user)):
 
     getbizid = db.query(models.Business).filter(models.Business.owner_id == current_user.id).first()
-    business_id = getbizid.id
-
+    
     price = subscription_price("yearly", db)
 
     #check if business exist
-    query = db.query(models.Business).filter(models.Business.id == business_id)
-    if not query.first():
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No business with id of {business_id} found")
+    if not getbizid:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Create a business to get started")
+
+    business_id = getbizid.id
 
     # check if there's an expired subscription
     expire = db.query(models.Subscription).filter(models.Subscription.business_id == business_id, models.Subscription.is_active == 'false')

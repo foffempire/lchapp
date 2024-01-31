@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from .routes import users, auth, business, category, catalog, certifications, comments, messages, rating, subscriptions, password_reset
-from .admin_routes import admin_auth, admin_users, admin_business, admin_subscription, admin_details, admin_category
+from .routes import users, auth, business, category, catalog, certifications, comments, messages, rating, subscriptions, password_reset, identity
+from .admin_routes import admin_auth, admin_users, admin_business, admin_subscription, admin_details, admin_category, admin_certification, admin_id_card
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -34,6 +34,7 @@ app.include_router(business.router)
 app.include_router(messages.router)
 app.include_router(catalog.router)
 app.include_router(certifications.router)
+app.include_router(identity.router)
 app.include_router(comments.router)
 app.include_router(rating.router)
 app.include_router(subscriptions.router)
@@ -46,3 +47,5 @@ app.include_router(admin_users.router)
 app.include_router(admin_business.router)
 app.include_router(admin_subscription.router)
 app.include_router(admin_category.router)
+app.include_router(admin_certification.router)
+app.include_router(admin_id_card.router)

@@ -1,13 +1,12 @@
 from fastapi import APIRouter, HTTPException, Depends, status, UploadFile
 from .. import models, schemas, oauth2, utils
-from ..database import engine, get_db
+from ..database import  get_db
 from sqlalchemy.orm import Session 
 from typing import List
 from ..utils import baseURL
 from fastapi.responses import JSONResponse
 import shutil
 import os
-import uuid
 
 
 
@@ -64,9 +63,13 @@ def add_certificate(cert: schemas.Cert, db: Session = Depends(get_db), current_u
     db.add(insert)
     db.commit()
     db.refresh(insert)
+
+    # notify admin
+    # notify()
     return insert
 
 
+"""
 # ***************UPDATE CERTIFICATE*******************
 @router.put("/certification/{id}", status_code=status.HTTP_200_OK, response_model=schemas.CertResponse)
 def update_certificate(id: int, cert: schemas.Cert, db: Session = Depends(get_db), current_user: str = Depends(oauth2.get_current_user)):
@@ -118,3 +121,5 @@ def view_single_certificate(cert_id: int, db: Session = Depends(get_db)):
     if not query:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No certificates found")   
     return query
+
+"""

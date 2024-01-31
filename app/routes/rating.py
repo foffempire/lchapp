@@ -52,3 +52,16 @@ def get_rating(business_id: int, db: Session = Depends(get_db)):
     query = db.query(func.round(func.avg(models.Rating.rating),1).label('rounded')).filter(models.Rating.business_id == business_id).all() 
     
     return query[0][0]
+
+
+
+# ***************GET NUMBER OF RATERS******************
+@router.get('/count_rating/{business_id}', status_code=status.HTTP_200_OK)
+def count_rating(business_id: int, db: Session = Depends(get_db)):
+
+    biz = db.query(models.Rating).filter(models.Rating.business_id == business_id)
+
+    if not biz.first():
+        return 0
+    
+    return len(biz.all())

@@ -72,9 +72,12 @@ class Business(Base):
     facebook = Column(String, nullable=True)
     instagram = Column(String, nullable=True)
     twitter = Column(String, nullable=True)
+    tiktok = Column(String, nullable=True)
     linkedin = Column(String, nullable=True)
     is_active = Column(Boolean, default=True, nullable=False)
     is_verified = Column(Boolean, default=False, nullable=False)
+    has_valid_cert = Column(Integer, nullable=True, default=0)
+    has_valid_id = Column(Integer, nullable=True, default=0)
     level = Column(Integer, default=1, nullable=False)
     location = Column(Text, nullable=True)
 
@@ -114,6 +117,17 @@ class Certifications(Base):
     business_id = Column(Integer, ForeignKey("business.id", ondelete="CASCADE"), nullable=False)
     name = Column(String, nullable=False)
     image = Column(String, nullable=False)
+    disapproved = Column(Integer, default=0, nullable=True)
+
+
+class Identity(Base):
+    __tablename__ = "identity"
+
+    id = Column(Integer, primary_key=True, index=True)
+    business_id = Column(Integer, ForeignKey("business.id", ondelete="CASCADE"), nullable=False)
+    name = Column(String, nullable=False)
+    image = Column(String, nullable=False)
+    disapproved = Column(Integer, default=0, nullable=True)
 
 
 class Comments(Base):

@@ -127,6 +127,15 @@ class CertResponse(Cert):
     id: int
 
 
+#************ IDENTITY SCHEMAs ******************
+class Identity(BaseModel):
+    name: str
+    image: str
+
+class IdentityResponse(Identity):
+    id: int
+
+
 #******************COMMENTS SCHEMAS ***********************
 class Comment(BaseModel):
     msg: str
@@ -228,9 +237,7 @@ class Business(BaseModel):
     owner: UserOut
     subscription: List[SubscriptionResponse]
     catalog: List[CatalogResponse]
-    certifications: List[CertResponse]
     comments: List[CommentResponse]
-    # sub_history: List[SubHistory]
 
 
 class BusinessAbout(BaseModel):
@@ -259,6 +266,7 @@ class BusinessSocial(BaseModel):
     facebook: Optional[str]
     instagram: Optional[str]
     twitter: Optional[str]
+    tiktok: Optional[str]
     linkedin: Optional[str]
 
 class BusinessHour(BaseModel):

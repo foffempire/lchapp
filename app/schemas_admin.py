@@ -96,6 +96,16 @@ class CertResponse(Cert):
     id: int
 
 
+#************ IDENTITY SCHEMAs ******************
+class Identity(BaseModel):
+    name: str
+    image: str
+
+class IdentityResponse(Identity):
+    id: int
+    business_id: int
+
+
 #******************COMMENTS SCHEMAS ***********************
 class Comment(BaseModel):
     msg: str
@@ -221,6 +231,7 @@ class BusinessSocial(BaseModel):
     facebook: Optional[str]
     instagram: Optional[str]
     twitter: Optional[str]
+    tiktok: Optional[str]
     linkedin: Optional[str]
 
 class BusinessHour(BaseModel):
