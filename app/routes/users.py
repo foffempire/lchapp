@@ -23,7 +23,7 @@ def root():
 
 
 # ***************REGISTER USER******************
-@router.post("/register", status_code=status.HTTP_201_CREATED, response_model=schemas.RegResponse)
+@router.post("/register", status_code=status.HTTP_201_CREATED)
 async def register(user: schemas.RegisterUser, db: Session = Depends(get_db)):
     user.email = user.email.lower()
     #email exist
@@ -76,9 +76,14 @@ async def register(user: schemas.RegisterUser, db: Session = Depends(get_db)):
     </html>
 """
 
-    await send_mail(user.email, "Confirm your email", html)
+    # await send_mail(user.email, "Confirm your email", html)
     
-    return new_uza
+    #create a token
+    access_token = oauth2.create_access_token(data = {"user_id": new_uza.id})
+
+    # return token
+    return {"id": new_uza.id, "email": new_uza.email, "access_token": access_token, "token_type":"bearer"}
+    # return new_uza
 
 
 # ***************RESEND CONFIRMATION EMAIL******************
