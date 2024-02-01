@@ -76,7 +76,7 @@ async def register(user: schemas.RegisterUser, db: Session = Depends(get_db)):
     </html>
 """
 
-    # await send_mail(user.email, "Confirm your email", html)
+    await send_mail(user.email, "Confirm your email", html)
     
     #create a token
     access_token = oauth2.create_access_token(data = {"user_id": new_uza.id})
