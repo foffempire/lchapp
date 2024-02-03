@@ -79,10 +79,10 @@ def add_catalog(catalog: schemas.Catalog, db: Session = Depends(get_db), current
 """
 
 @router.post("/catalog/upload/")
-def upload_certificate_image(file: UploadFile ):
+def upload_catalog_image(file: UploadFile ):
 
     # Define the directory to save uploaded images
-    UPLOAD_DIRECTORY = "uploads/certificate/"
+    UPLOAD_DIRECTORY = "uploads/catalog/"
 
     # Create the upload directory if it doesn't exist
     os.makedirs(UPLOAD_DIRECTORY, exist_ok=True)

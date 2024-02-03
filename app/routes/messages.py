@@ -140,28 +140,24 @@ def reply_message(conversation_id: int, msg: schemas.Message, db: Session = Depe
     
 
 # ***************GET CONVERSATIONS*******************
-@router.get('/message', status_code=status.HTTP_200_OK, response_model=List[schemas.Conversation])
+@router.get('/message', status_code=status.HTTP_200_OK)
 def get_my_conversations(db: Session = Depends(get_db), current_user: str = Depends(oauth2.get_current_user)):
 
     query = db.query(models.Conversations).filter(or_(models.Conversations.receiver_id == current_user.id, models.Conversations.sender_id == current_user.id)).order_by(desc(models.Conversations.date_updated)).all()
-    
+   
     if not query:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No messages found")  
     
-    return query
-    # # my_list=[]
-    # for chat in query:
-    #     if chat.sender_id is not current_user.id:
-    #         chat_with = chat.sender_id
-    #     else:
-    #         chat_with = chat.receiver_id
-        
-    #     # my_list.append({"chat_with": chat_with})
-    #     # return my_list
-
-    #     # return {"conversation_id": i, "chat_with": chat_with}
+    # return query
+    my_list=[]
+    for chat in query:
+        if chat.sender_id is not current_user.id:
+            my_list.append({ "id": chat.id, "last_message": chat.last_message, "date_updated": chat.date_updated, "user": chat.sender_id})
+        else:
+            my_list.append({ "id": chat.id, "last_message": chat.last_message, "date_updated": chat.date_updated, "user": chat.receiver_id})
     
-    # return {"Conversation_id": chat.id, "last_message": chat.last_message, "chat_with":chat_with}
+    return my_list
+    
      
 
 # ***************GET CONVERSATIONS USER*******************
