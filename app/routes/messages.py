@@ -152,9 +152,11 @@ def get_my_conversations(db: Session = Depends(get_db), current_user: str = Depe
     my_list=[]
     for chat in query:
         if chat.sender_id is not current_user.id:
-            my_list.append({ "id": chat.id, "last_message": chat.last_message, "date_updated": chat.date_updated, "user": chat.sender_id})
+            stmt = db.query(models.User).filter(models.User.id == chat.sender_id).first()
+            my_list.append({ "id": chat.id, "last_message": chat.last_message, "date_updated": chat.date_updated, "firstname": stmt.firstname, "lastname": stmt.lastname, "img": stmt.image})
         else:
-            my_list.append({ "id": chat.id, "last_message": chat.last_message, "date_updated": chat.date_updated, "user": chat.receiver_id})
+            stmt = db.query(models.User).filter(models.User.id == chat.receiver_id).first()
+            my_list.append({ "id": chat.id, "last_message": chat.last_message, "date_updated": chat.date_updated, "firstname": stmt.firstname, "lastname": stmt.lastname, "img": stmt.image})
     
     return my_list
     

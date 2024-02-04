@@ -176,7 +176,7 @@ class Conversation(BaseModel):
     id: int
     last_message: str
     date_updated: datetime
-    # chat_with: UserOut
+    # user: UserOut
 
 #************ RATING SCHEMAS ******************
 class Rating(BaseModel):
