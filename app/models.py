@@ -217,3 +217,13 @@ class SubPrice(Base):
     price = Column(Float, nullable=False)
     date_updated = Column(TIMESTAMP(timezone=False), server_default=text("now()"), nullable=False)
 
+
+class Notification(Base):
+    __tablename__ = "notifications"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, nullable=False)
+    title = Column(String, nullable=False)
+    message = Column(Text, nullable=False)
+    is_read = Column(Integer, default=0)
+    date_created = Column(TIMESTAMP(timezone=False), server_default=text("now()"), nullable=False)

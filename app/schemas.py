@@ -313,3 +313,14 @@ class Category(BaseModel):
 class CategoryResponse(Category):
     id: int
 
+
+#************ NOTIFICATION SCHEMA ******************
+class Notification(BaseModel):
+    user_id: int
+    title: str
+    message: str
+
+class NotificationResponse(Notification):
+    id: int
+    is_read: int
+    date_created: datetime
