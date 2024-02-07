@@ -18,7 +18,7 @@ router = APIRouter(
 # bannerImgUrl = f"{baseURL}uploads/banner/"
 bannerImgUrl = "uploads/banner/"
 
-# ***************ADD/UPDATE BUSINESS NAME/ABOUT*******************
+# ***************ADD BUSINESS NAME/ABOUT*******************
 @router.post("/business", status_code=status.HTTP_201_CREATED, response_model=schemas.Business)
 def add_business(biz: schemas.BusinessAbout, db: Session = Depends(get_db), current_user: str = Depends(oauth2.get_current_user)):
 
@@ -40,6 +40,25 @@ def add_business(biz: schemas.BusinessAbout, db: Session = Depends(get_db), curr
         db.refresh(insert)
         return insert
     
+
+# ***************UPDATE BUSINESS NAME/ABOUT*******************
+@router.put("/business", status_code=status.HTTP_201_CREATED, response_model=schemas.Business)
+def update_business(biz: schemas.BusinessAbout, db: Session = Depends(get_db), current_user: str = Depends(oauth2.get_current_user)):
+
+    query = db.query(models.Business).filter(models.Business.owner_id == current_user.id)
+    random = utils.generate_unique_id(15)
+
+    itag = f"{biz.name}, {biz.about}, {biz.category}"
+    #details exist
+    details_exist = query.first()
+    if details_exist:
+        query.update(biz.model_dump(), synchronize_session=False)
+        query.first().tag = itag
+        db.commit()
+        return query.first()
+
+    
+
 
 # ***************UPLOAD BANNER IMAGE*******************
 @router.post("/business/upload/")

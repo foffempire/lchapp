@@ -73,3 +73,12 @@ def get_comments(business_id: int, db: Session = Depends(get_db)):
     if not query:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No reviews found")   
     return query
+
+# ***************COUNT COMMENTS*******************
+@router.get('/count_comment/{business_id}', status_code=status.HTTP_200_OK)
+def count_comments(business_id: int, db: Session = Depends(get_db)):
+    query = db.query(models.Comments).filter(models.Comments.business_id == business_id).all()
+    if not query:
+        return 0   
+    return len(query)
+
