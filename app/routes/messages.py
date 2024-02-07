@@ -218,7 +218,7 @@ def get_conversation_messages_with_user_id(receiver_id: int, db: Session = Depen
         )
     
     if not getCID.first():
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No conversation with id of {conversation_id}") 
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No messages") 
     
     conversation_id = getCID.first().id
 
