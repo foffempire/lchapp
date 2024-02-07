@@ -186,9 +186,9 @@ def get_convesation_user(conversation_id: int, db: Session = Depends(get_db), cu
  
  
 
-# ***************GET ONE MESSAGING*******************
+# ***************GET CHAT MESSAGES USING CONVERSATION ID*******************
 @router.get('/message/{conversation_id}', status_code=status.HTTP_200_OK, response_model=List[schemas.MessageResponse])
-def get_conversation_messages(conversation_id: str, db: Session = Depends(get_db), current_user: str = Depends(oauth2.get_current_user)):
+def get_conversation_messages_with_conversation_id(conversation_id: str, db: Session = Depends(get_db), current_user: str = Depends(oauth2.get_current_user)):
 
     query = db.query(models.Messages).filter(models.Messages.conversation_id == conversation_id)
 
@@ -200,6 +200,38 @@ def get_conversation_messages(conversation_id: str, db: Session = Depends(get_db
      
     return query
 
+
+
+# ***************GET CHAT MESSAGES USING USER ID *******************
+@router.get('/messages/{receiver_id}', status_code=status.HTTP_200_OK, response_model=List[schemas.MessageResponse])
+def get_conversation_messages_with_user_id(receiver_id: int, db: Session = Depends(get_db), current_user: str = Depends(oauth2.get_current_user)):
+
+    getCID = db.query(models.Conversations).filter(
+        or_(
+            and_(
+                models.Conversations.sender_id == current_user.id, models.Conversations.receiver_id == receiver_id
+                ),
+            (and_(
+                models.Conversations.sender_id == receiver_id, models.Conversations.receiver_id == current_user.id
+                ))
+            )
+        )
+    
+    if not getCID.first():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No conversation with id of {conversation_id}") 
+    
+    conversation_id = getCID.first().id
+
+
+    query = db.query(models.Messages).filter(models.Messages.conversation_id == conversation_id)
+
+    if not query.first():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No conversation with id of {conversation_id}")  
+    
+    if not verify_owner(conversation_id, current_user.id, db):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"You not autorized to view this message {conversation_id}")  
+     
+    return query
 
 
 
