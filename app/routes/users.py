@@ -1,4 +1,5 @@
-from fastapi import APIRouter, HTTPException, Depends, status, UploadFile
+from fastapi import APIRouter, HTTPException, Depends, status, UploadFile, Request
+from fastapi.responses import HTMLResponse
 from .. import models, schemas, oauth2, utils
 from ..database import get_db
 from sqlalchemy.orm import Session 
@@ -8,6 +9,7 @@ import shutil
 import os
 from ..email import send_mail
 import random
+from fastapi.templating import Jinja2Templates
 
 router = APIRouter(
     tags=["User"]
@@ -15,6 +17,11 @@ router = APIRouter(
 
 # userImgUrl = f"{baseURL}uploads/users/"
 userImgUrl = "uploads/users/"
+
+# Jinja2 templating
+templates = Jinja2Templates(directory="templates")
+
+
 
 @router.get("/")
 def root():
@@ -138,20 +145,23 @@ async def resend(email: str, db: Session = Depends(get_db)):
 
 
 # ***************EMAIL CONFIRMATION******************
-@router.get("/register/{email}/{verify}/{code}", status_code=status.HTTP_201_CREATED)
-def verify_email(email: str, verify: int, db: Session = Depends(get_db)):
+@router.get("/register/{email}/{verify}/{code}", response_class=HTMLResponse, status_code=status.HTTP_201_CREATED)
+def verify_email(email: str, verify: int, request: Request, db: Session = Depends(get_db)):
     query = db.query(models.User).filter(models.User.email == email, models.User.verification_code == verify)
 
     # if email and code not found
     if not query.first():
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Verification failed! Email not found, or already verified.")
+        # raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Verification failed! Email not found, or already verified.")
+        return templates.TemplateResponse(request=request, name="verification_failed.html", context={"baseURL": baseURL})
 
     # if email and code is found
     if query.first():
         query.first().verification_code = 100001
         query.first().email_verified = 1
         db.commit()
-        return {"data":"success"}
+        # return {"data":"success"}
+
+        return templates.TemplateResponse(request=request, name="verification_success.html", context={"baseURL": baseURL})
 
 
 # ***************PHONE CONFIRMATION******************

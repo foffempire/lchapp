@@ -3,6 +3,5 @@ __pycache__/
 readme
 .env
 index.html
-templates/
 uploads/
 todo.txt

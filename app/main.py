@@ -24,6 +24,7 @@ app.add_middleware(
 # make uploads folder readable from outside world
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 app.mount("/resources", StaticFiles(directory="resources"), name="resources")
+app.mount("/templates", StaticFiles(directory="templates"), name="templates")
 
 
 
@@ -42,12 +43,12 @@ app.include_router(subscriptions.router)
 app.include_router(category.router)
 
 # admin routes
-# app.include_router(admin_auth.router)
-# app.include_router(admin_details.router)
-# app.include_router(admin_users.router)
-# app.include_router(admin_business.router)
-# app.include_router(admin_subscription.router)
-# app.include_router(admin_category.router)
-# app.include_router(admin_certification.router)
-# app.include_router(admin_id_card.router)
-# app.include_router(admin_notify.router)
+app.include_router(admin_auth.router)
+app.include_router(admin_details.router)
+app.include_router(admin_users.router)
+app.include_router(admin_business.router)
+app.include_router(admin_subscription.router)
+app.include_router(admin_category.router)
+app.include_router(admin_certification.router)
+app.include_router(admin_id_card.router)
+app.include_router(admin_notify.router)
