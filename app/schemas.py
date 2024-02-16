@@ -217,6 +217,7 @@ class Business(BaseModel):
     bid: str
     name: str
     about: Optional[str]
+    phone: Optional[str]
     category: Optional[str]
     image: Optional[str]
     years_of_experience: Optional[int]
@@ -244,6 +245,7 @@ class Business(BaseModel):
 class BusinessAbout(BaseModel):
     name: str
     about: Optional[str]
+    phone: Optional[str]
     category: Optional[str]
     work_experience: Optional[str]
     years_of_experience: Optional[int]

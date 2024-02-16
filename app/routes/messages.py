@@ -162,7 +162,7 @@ def get_my_conversations(db: Session = Depends(get_db), current_user: str = Depe
     
      
 
-# ***************GET CONVERSATIONS USER*******************
+# ***************GET CONVERSATIONS USER (not used)*******************
 @router.get('/message_user/{conversation_id}', status_code=status.HTTP_200_OK)
 def get_convesation_user(conversation_id: int, db: Session = Depends(get_db), current_user: str = Depends(oauth2.get_current_user)):
 

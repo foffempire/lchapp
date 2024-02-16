@@ -56,6 +56,7 @@ class Business(Base):
     owner_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     name = Column(String, nullable=False)
     about = Column(Text, nullable=True)
+    phone = Column(String, nullable=True)
     category = Column(String, nullable=True)
     image = Column(String, default="uploads/banner/default.png", nullable=True)
     tag = Column(Text, nullable=False)
