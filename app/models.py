@@ -90,6 +90,13 @@ class Business(Base):
     sub_history = relationship("SubHistory")
 
 
+class SearchHistory(Base):
+    __tablename__ = "search_history"
+
+    id = Column(Integer, primary_key=True, index=True)
+    search = Column(String, nullable=False)
+
+
 class Catalog(Base):
     __tablename__ = "catalog"
 

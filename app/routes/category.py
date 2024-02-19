@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends, status
 from .. import models, schemas
 from ..database import get_db
 from sqlalchemy.orm import Session 
+from sqlalchemy import func
 from typing import List
 
 
@@ -18,22 +19,3 @@ def get_all_category(db: Session = Depends(get_db)):
     return category
 
 
-"""
-# ***************GET PARENT CATEGORY*******************
-@router.get("/category/main", status_code=status.HTTP_200_OK, response_model=List[schemas.CategoryResponse])
-def get_parent_category(db: Session = Depends(get_db)):
-    category = db.query(models.Category).filter(models.Category.parent_id == 0).all()
-    if not category:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No category found!")
-    return category
-
-
-# ***************GET PARENT CATEGORY*******************
-@router.get("/category/{parent_id}", status_code=status.HTTP_200_OK, response_model=List[schemas.CategoryResponse])
-def get_sub_category(parent_id: int, db: Session = Depends(get_db)):
-    category = db.query(models.Category).filter(models.Category.parent_id == parent_id).all()
-    if not category:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No category found!")
-    return category
-
-"""

@@ -221,6 +221,7 @@ def query_businesses(db: Session = Depends(get_db), search: str = '', limit: int
     results =  db.query(models.Business).filter(func.lower(models.Business.tag).like('%' +func.lower(search) + '%'), func.lower(models.Business.city).like('%' +func.lower(location) + '%')).limit(limit=limit).offset(skip).all()
   
 
+
     """
     results =  db.query(models.Business).filter(or_(func.lower(models.Business.tag).like('%' +func.lower(search) + '%'), func.lower(models.Business.city).like('%' +func.lower(location) + '%'))).limit(limit=limit).offset(skip).all()
     """
@@ -228,8 +229,23 @@ def query_businesses(db: Session = Depends(get_db), search: str = '', limit: int
     if not results:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Business no found.")
     
+    insert = models.SearchHistory(search = search.lower())
+    db.add(insert)
+    db.commit()
+
     return results
 
+
+# ***************GET SEARCH SUGGESTIONS*******************
+@router.get("/search_suggest/{search}", status_code=status.HTTP_200_OK)
+def search_suggest(search: str, db: Session = Depends(get_db)):
+    search=search.lower()
+    recent = db.query(models.SearchHistory).filter((models.SearchHistory.search).like('%' +search + '%')).limit(6).all()
+                                                     
+    if not recent:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No recent search found!")
+    
+    return recent
 
 
 # ***************SAVE/FAVORITE A BUSINESS*******************

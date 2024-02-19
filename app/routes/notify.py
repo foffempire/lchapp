@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends, status
 from .. import models, schemas, oauth2
 from ..database import get_db
 from sqlalchemy.orm import Session 
-from sqlalchemy import or_
+from sqlalchemy import or_, desc
 from typing import List
 
 
@@ -12,8 +12,9 @@ router = APIRouter(
 
 # ***************ADD NOTIFICATIONS*******************
 # @router.post("/notify", status_code=status.HTTP_200_OK, response_model=schemas.NotificationResponse)
-def notify(notify: schemas.Notification, db: Session = Depends(get_db)):
-    insert = models.Notification(**notify.model_dump())
+# def notify(notify: schemas.Notification, db: Session = Depends(get_db)):
+def notify(user_id: int, title: str, message:str, db: Session = Depends(get_db)):
+    insert = models.Notification(user_id=user_id, title=title, message=message)
     db.add(insert)
     db.commit()
     db.refresh(insert)
@@ -23,7 +24,7 @@ def notify(notify: schemas.Notification, db: Session = Depends(get_db)):
 # ***************GET NOTIFICATIONS*******************
 @router.get("/notifications", status_code=status.HTTP_200_OK, response_model=List[schemas.NotificationResponse])
 def get_notification(db: Session = Depends(get_db), current_user: str = Depends(oauth2.get_current_user)):
-    query = db.query(models.Notification).filter(or_(models.Notification.user_id == current_user.id, models.Notification.user_id == 0))
+    query = db.query(models.Notification).filter(or_(models.Notification.user_id == current_user.id, models.Notification.user_id == 0)).order_by(desc(models.Notification.date_created)).limit(5)
     if not query.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No notifications found!")
     return query.all()

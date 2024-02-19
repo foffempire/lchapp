@@ -4,15 +4,16 @@ from email.mime.multipart import MIMEMultipart
 from .config import settings
 
 
-MAIL_USERNAME = 'mo6014245571@gmail.com'
+# MAIL_USERNAME = 'mo6014245571@gmail.com'
+# MAIL_PASSWORD = settings.mail_password
+# MAIL_PORT = 465
+# MAIL_SERVER = 'smtp.gmail.com'
+
+
+MAIL_USERNAME = 'noreply@labourch.com'
 MAIL_PASSWORD = settings.mail_password
-MAIL_FROM = "mo6014245571@gmail.com"
-MAIL_PORT = 587
-MAIL_SERVER = 'smtp.gmail.com'
-MAIL_FROM_NAME = "Labour Connect Hub"
-
-
-
+MAIL_PORT = 465
+MAIL_SERVER = 'labourch.com'
 
 async def send_mail(to: str, subject: str, body: str):
     message = MIMEMultipart("alternative")
@@ -25,7 +26,7 @@ async def send_mail(to: str, subject: str, body: str):
     context = ssl.create_default_context()
 
     try:
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
+        with smtplib.SMTP_SSL(MAIL_SERVER, MAIL_PORT, context=context) as server:
             server.login(MAIL_USERNAME, MAIL_PASSWORD)
             server.sendmail(MAIL_USERNAME, to, message.as_string())
     except Exception as e:

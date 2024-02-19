@@ -10,6 +10,7 @@ import shutil
 import os
 from ..utils import baseURL
 from datetime import datetime
+from .notify import notify
 
 router = APIRouter(
     tags=['messages']
@@ -88,6 +89,7 @@ def send_message(receiver_id: int, msg: schemas.Message, db: Session = Depends(g
         return insert
     
     else:
+        notify(receiver_id, "New message", msg.message, db)
         conversation_name = generate_unique_id(10) 
 
         # insert into conversation table   
@@ -105,6 +107,8 @@ def send_message(receiver_id: int, msg: schemas.Message, db: Session = Depends(g
             db.commit()
             db.refresh(insert)
             return insert
+        
+        
     
         
 @router.post("/reply_message/{conversation_id}", status_code=status.HTTP_200_OK, response_model=schemas.MessageResponse)

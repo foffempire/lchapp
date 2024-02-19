@@ -240,6 +240,7 @@ class Business(BaseModel):
     subscription: List[SubscriptionResponse]
     catalog: List[CatalogResponse]
     comments: List[CommentResponse]
+    certifications: List[CertResponse]
 
 
 class BusinessAbout(BaseModel):
