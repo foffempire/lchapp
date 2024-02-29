@@ -12,16 +12,14 @@ router = APIRouter(
 
 #get all users
 @router.get("/admin/users/", status_code=status.HTTP_200_OK, response_model=List[schemas_admin.UserOut])
-# def get_users(db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
-def get_users(db: Session = Depends(get_db)):
+def get_users(db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
     uza =  db.query(models.User).order_by(models.User.firstname).all()
     return uza
 
 
 #get one users
 @router.get("/admin/user/{id}", status_code=status.HTTP_200_OK, response_model=List[schemas_admin.UserOut])
-# def get_one_users(id: int, db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
-def get_one_users(id: int, db: Session = Depends(get_db)):
+def get_one_users(id: int, db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
     uza =  db.query(models.User).filter(models.User.id == id)
 
     if(uza.first()):

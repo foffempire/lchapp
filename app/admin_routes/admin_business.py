@@ -25,8 +25,7 @@ def get_single_business( id: int, db: Session = Depends(get_db), admin_user: str
 
 # ***************GET ALL BUSINESSES*******************
 @router.get("/admin/businesses/", status_code=status.HTTP_200_OK, response_model=List[schemas_admin.Business])
-# def get_all_businesses(db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
-def get_all_businesses(db: Session = Depends(get_db)):
+def get_all_businesses(db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
 
     # query all businesses
     results =  db.query(models.Business).order_by(models.Business.name).all()
@@ -39,9 +38,7 @@ def get_all_businesses(db: Session = Depends(get_db)):
 
 # ***************GET SUBSCRIBED BUSINESSES*******************
 @router.get("/admin/subscribed_businesses/", status_code=status.HTTP_200_OK, response_model=List[schemas_admin.Business])
-# def get_all_subscribed_businesses(db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
-def get_all_subscribed_businesses(db: Session = Depends(get_db)):
-
+def get_all_subscribed_businesses(db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
     
     # query only subscribed businesses
     results =  db.query(models.Business).join(models.Subscription, models.Business.id == models.Subscription.business_id).filter(models.Subscription.is_active == True).all()
@@ -56,8 +53,7 @@ def get_all_subscribed_businesses(db: Session = Depends(get_db)):
 
 # ***************COUNT BUSINESSES*******************
 @router.get("/admin/count_business/", status_code=status.HTTP_200_OK)
-def count_businesses(db: Session = Depends(get_db)):
-# def count_businesses(db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
+def count_businesses(db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
     results =  db.query(func.count(models.Business.id).label("total_biz")).scalar()
     if not results:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="0")
