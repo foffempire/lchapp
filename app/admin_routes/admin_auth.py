@@ -7,7 +7,7 @@ router = APIRouter(
     tags=["Admin"]
 )
 
-@router.post("/admin/login/", response_model=schemas.Token)
+@router.post("/admin/login/", status_code=status.HTTP_200_OK, response_model=schemas.Token)
 def login(userlogin: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(database.get_db)):
     userlogin.username = userlogin.username.lower()
     user = db.query(models.Admin).filter(models.Admin.username == userlogin.username).first()

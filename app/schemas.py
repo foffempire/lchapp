@@ -236,6 +236,9 @@ class Business(BaseModel):
     twitter: Optional[str]
     linkedin: Optional[str]
     is_active: bool
+    is_verified: bool
+    has_valid_cert: int
+    has_valid_id: int
     owner: UserOut
     subscription: List[SubscriptionResponse]
     catalog: List[CatalogResponse]

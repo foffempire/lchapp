@@ -67,7 +67,8 @@ def delete_category(id: int, db: Session = Depends(get_db), admin_user: str = De
 
 # ***************GET ALL CATEGORY*******************
 @router.get("/admin_category/", status_code=status.HTTP_200_OK, response_model=List[schemas_admin.CategoryResponse])
-def get_all_category(db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
+# def get_all_category(db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
+def get_all_category(db: Session = Depends(get_db)):
     category = db.query(models.Category).all()
     if not category:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No category found!")
@@ -85,7 +86,8 @@ def get_all_parent_category(db: Session = Depends(get_db), admin_user: str = Dep
 
 # ***************GET PARENT CATEGORY*******************
 @router.get("/admin_category/{parent_id}", status_code=status.HTTP_200_OK)
-def get_sub_category(parent_id: int, db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
+# def get_sub_category(parent_id: int, db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
+def get_sub_category(parent_id: int, db: Session = Depends(get_db)):
 
     if(parent_id == 0):        
         return "None"

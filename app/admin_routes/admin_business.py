@@ -25,10 +25,11 @@ def get_single_business( id: int, db: Session = Depends(get_db), admin_user: str
 
 # ***************GET ALL BUSINESSES*******************
 @router.get("/admin/businesses/", status_code=status.HTTP_200_OK, response_model=List[schemas_admin.Business])
-def get_all_businesses(db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
+# def get_all_businesses(db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
+def get_all_businesses(db: Session = Depends(get_db)):
 
     # query all businesses
-    results =  db.query(models.Business).all()
+    results =  db.query(models.Business).order_by(models.Business.name).all()
 
     if not results:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=" NO business found.")
@@ -38,7 +39,8 @@ def get_all_businesses(db: Session = Depends(get_db), admin_user: str = Depends(
 
 # ***************GET SUBSCRIBED BUSINESSES*******************
 @router.get("/admin/subscribed_businesses/", status_code=status.HTTP_200_OK, response_model=List[schemas_admin.Business])
-def get_all_subscribed_businesses(db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
+# def get_all_subscribed_businesses(db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
+def get_all_subscribed_businesses(db: Session = Depends(get_db)):
 
     
     # query only subscribed businesses
