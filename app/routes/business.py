@@ -8,6 +8,7 @@ from fastapi.responses import JSONResponse
 import shutil
 import os
 from ..utils import baseURL
+from PIL import Image
 
 
 router = APIRouter(
@@ -64,6 +65,7 @@ def update_business(biz: schemas.BusinessAbout, db: Session = Depends(get_db), c
 @router.post("/business/upload/")
 def upload_banner_image(file: UploadFile ):
 
+
     # Define the directory to save uploaded images
     UPLOAD_DIRECTORY = "uploads/banner/"
 
@@ -78,9 +80,17 @@ def upload_banner_image(file: UploadFile ):
         # Save the uploaded file to the specified directory
         with open(os.path.join(UPLOAD_DIRECTORY+filename), "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
+
+            # resize image
+            base_width= 300
+            img = Image.open(f"{UPLOAD_DIRECTORY}/{filename}")
+            wpercent = (base_width / float(img.size[0]))
+            hsize = int((float(img.size[1]) * float(wpercent)))
+            img = img.resize((base_width, hsize), Image.Resampling.LANCZOS)
+            img.save(f"{UPLOAD_DIRECTORY}/{filename}")
         
         return {"filename" : bannerImgUrl+filename}
-    
+
     except Exception as e:
         return JSONResponse(content={"message": f"Failed to upload file: {str(e)}"}, status_code=500)
  

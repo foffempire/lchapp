@@ -8,6 +8,7 @@ import shutil
 import os
 from ..utils import baseURL
 from fastapi.responses import JSONResponse
+from PIL import Image
 
 
 
@@ -95,6 +96,14 @@ def upload_catalog_image(file: UploadFile ):
         # Save the uploaded file to the specified directory
         with open(os.path.join(UPLOAD_DIRECTORY+filename), "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
+
+            # resize image
+            base_width= 300
+            img = Image.open(f"{UPLOAD_DIRECTORY}/{filename}")
+            wpercent = (base_width / float(img.size[0]))
+            hsize = int((float(img.size[1]) * float(wpercent)))
+            img = img.resize((base_width, hsize), Image.Resampling.LANCZOS)
+            img.save(f"{UPLOAD_DIRECTORY}/{filename}")
         
         return {"filename" : catImgUrl+filename}
     
