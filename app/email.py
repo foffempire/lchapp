@@ -4,16 +4,16 @@ from email.mime.multipart import MIMEMultipart
 from .config import settings
 
 
-# MAIL_USERNAME = 'mo6014245571@gmail.com'
-# MAIL_PASSWORD = settings.mail_password
-# MAIL_PORT = 465
-# MAIL_SERVER = 'smtp.gmail.com'
-
-
-MAIL_USERNAME = 'noreply@labourch.com'
+MAIL_USERNAME = 'mo6014245571@gmail.com'
 MAIL_PASSWORD = settings.mail_password
 MAIL_PORT = 465
-MAIL_SERVER = 'labourch.com'
+MAIL_SERVER = 'smtp.gmail.com'
+
+
+# MAIL_USERNAME = 'noreply@labourch.com'
+# MAIL_PASSWORD = settings.mail_password
+# MAIL_PORT = 465
+# MAIL_SERVER = 'labourch.com'
 
 async def send_mail(to: str, subject: str, body: str):
     message = MIMEMultipart("alternative")
