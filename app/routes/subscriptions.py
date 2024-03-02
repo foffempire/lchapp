@@ -256,9 +256,18 @@ def yearly_sub(db: Session = Depends(get_db), current_user: str = Depends(oauth2
 
 
 # ***************GET SUBSCRIPTION PRICE*******************
-@router.get("/get_subprices/", status_code=status.HTTP_200_OK, response_model=List[schemas.SubPrice])
-def get_subprices( db: Session = Depends(get_db) ):
+# @router.get("/get_subprices/", status_code=status.HTTP_200_OK, response_model=List[schemas.SubPrice])
+# def get_subprices( db: Session = Depends(get_db) ):
 
-    query =  db.query(models.SubPrice).all()
+#     query =  db.query(models.SubPrice).all()
     
-    return query
+#     return query
+
+
+# ***************GET SUBSCRIPTION PRICE*******************
+@router.get("/get_subprices/", status_code=status.HTTP_200_OK)
+def get_subprices():
+    
+    return {"name":"premium","amount":1000, "description":{"Increase Profile Visibility","Profile Suggestion to new users","Profile Display on Homepage","Credibility boost"}}
+
+

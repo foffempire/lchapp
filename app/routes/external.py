@@ -18,16 +18,20 @@ templates = Jinja2Templates(directory="templates")
 
 # ***************FAQ PAGE******************
 @router.get("/external/terms", response_class=HTMLResponse, status_code=status.HTTP_200_OK)
-def faq(request: Request, db: Session = Depends(get_db)):
+def faq(request: Request):
 
     return templates.TemplateResponse(request=request, name="tandc.html", context={"baseURL": baseURL})
 
 
 # ***************ABOUT PAGE******************
 @router.get("/external/about", response_class=HTMLResponse, status_code=status.HTTP_200_OK)
-def about(request: Request, db: Session = Depends(get_db)):
+def about(request: Request):
 
     return templates.TemplateResponse(request=request, name="about.html", context={"baseURL": baseURL})
 
 
 
+# ***************SUBSCRIPTION PAGE*******************
+@router.get("/premium/", status_code=status.HTTP_200_OK)
+def premium(request: Request):
+    return templates.TemplateResponse(request=request, name="premium.html", context={"baseURL": baseURL})

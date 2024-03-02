@@ -82,7 +82,7 @@ def upload_banner_image(file: UploadFile ):
             shutil.copyfileobj(file.file, buffer)
 
             # resize image
-            base_width= 300
+            base_width= 500
             img = Image.open(f"{UPLOAD_DIRECTORY}/{filename}")
             wpercent = (base_width / float(img.size[0]))
             hsize = int((float(img.size[1]) * float(wpercent)))

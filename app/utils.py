@@ -18,4 +18,3 @@ def generate_unique_id(len):
 
 # baseURL = 'http://127.0.0.1:8000/'
 baseURL = 'https://lchapp.com.ng/'
-# baseURL = 'https://labour-6kd3.onrender.com/'

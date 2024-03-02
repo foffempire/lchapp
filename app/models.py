@@ -221,7 +221,7 @@ class SubPrice(Base):
     __tablename__ = "sub_price"
 
     id = Column(Integer, primary_key=True, index=True)
-    duration = Column(String, nullable=False)
+    name = Column(String, nullable=False)
     price = Column(Float, nullable=False)
     date_updated = Column(TIMESTAMP(timezone=False), server_default=text("now()"), nullable=False)
 
