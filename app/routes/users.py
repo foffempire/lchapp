@@ -10,6 +10,7 @@ import os
 from ..email import send_mail
 import random
 from fastapi.templating import Jinja2Templates
+from ..config import settings
 
 router = APIRouter(
     tags=["User"]
@@ -25,7 +26,7 @@ templates = Jinja2Templates(directory="templates")
 
 @router.get("/")
 def root():
-    return {"message": "Welcome"}
+    return {"Welcome"}
 
 
 

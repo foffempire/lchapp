@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from .routes import users, auth, business, category, catalog, certifications, comments, messages, rating, subscriptions, password_reset, identity, notify, external
+from .routes import users, auth, business, category, catalog, certifications, comments, messages, rating, subscriptions, password_reset, identity, notify, external, auth_google
 from .admin_routes import admin_auth, admin_users, admin_business, admin_subscription, admin_details, admin_category, admin_certification, admin_id_card, admin_notify
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
@@ -29,6 +29,7 @@ app.mount("/templates", StaticFiles(directory="templates"), name="templates")
 
 
 app.include_router(auth.router)
+app.include_router(auth_google.router)
 app.include_router(users.router)
 app.include_router(password_reset.router)
 app.include_router(business.router)

@@ -4,7 +4,7 @@ from email.mime.multipart import MIMEMultipart
 from .config import settings
 
 
-MAIL_USERNAME = 'mo6014245571@gmail.com'
+MAIL_USERNAME = 'labourconnecthub@gmail.com'
 MAIL_PASSWORD = settings.mail_password
 MAIL_PORT = 465
 MAIL_SERVER = 'smtp.gmail.com'
