@@ -10,7 +10,7 @@ from ..config import settings
 router = APIRouter(
     tags=["Google Authentication"]
 )
-
+"""
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 @router.get("/login/google")
@@ -64,4 +64,32 @@ async def auth_google(code: str, db: Session = Depends(database.get_db)):
     # result.append(user_info.json())
     # result.append(access_token)
     # return result
+
+"""
+@router.get("/auth/google")
+async def auth_google(email: str, firstname: str = '', lastname: str = '', db: Session = Depends(database.get_db)):
+   
+    #check if user exist
+    query = db.query(models.User).filter(models.User.email == email)
+
+    if query.first():
+        #create a token
+        access_token = oauth2.create_access_token(data = {"user_id": query.first().id})
+
+        # return token
+        return {"access_token": access_token, "token_type":"bearer"}
+
+    else:
+        verification_code = random.randint(100000, 999999)
+        new_uza =  models.User(verification_code = verification_code, email = email, password="password", firstname = firstname, lastname = lastname, email_verified = 1)
+        db.add(new_uza)
+        db.commit()
+        db.refresh(new_uza)
+
+        #create a token
+        access_token = oauth2.create_access_token(data = {"user_id": new_uza.id})
+
+        # return token
+        return {"id": new_uza.id, "email": new_uza.email, "access_token": access_token, "token_type":"bearer"}
+
 

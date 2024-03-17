@@ -10,7 +10,6 @@ import os
 from ..email import send_mail
 import random
 from fastapi.templating import Jinja2Templates
-from ..config import settings
 
 router = APIRouter(
     tags=["User"]
@@ -185,6 +184,20 @@ def verify_phone(ph: schemas.VerifyPhone, db: Session = Depends(get_db)):
 # ***************PERSONAL DETAILS*******************
 @router.post("/user/", status_code=status.HTTP_201_CREATED, response_model=schemas.UserOut)
 def update_personal_details(user: schemas.Personal, db: Session = Depends(get_db), current_user: str = Depends(oauth2.get_current_user)):
+    query = db.query(models.User).filter(models.User.id == current_user.id)
+    
+    #details exist
+    details_exist = query.first()
+    if details_exist:
+        query.update(user.model_dump(), synchronize_session=False)
+        db.commit()
+        return query.first()
+    else:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
+
+@router.put("/user/", status_code=status.HTTP_201_CREATED, response_model=schemas.UserOut)
+def update_personal_detail(user: schemas.Personal, db: Session = Depends(get_db), current_user: str = Depends(oauth2.get_current_user)):
     query = db.query(models.User).filter(models.User.id == current_user.id)
     
     #details exist
