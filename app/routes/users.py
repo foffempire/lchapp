@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends, status, UploadFile, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from .. import models, schemas, oauth2, utils
 from ..database import get_db
 from sqlalchemy.orm import Session 
@@ -22,10 +22,9 @@ userImgUrl = "uploads/users/"
 templates = Jinja2Templates(directory="templates")
 
 
-
 @router.get("/")
 def root():
-    return {"Welcome"}
+    return RedirectResponse('https://www.labourch.com', status_code=status.HTTP_302_FOUND, headers={"x-error": "Invalid credentials"})
 
 
 
