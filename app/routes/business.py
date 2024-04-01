@@ -226,7 +226,7 @@ def get_all_businesses(db: Session = Depends(get_db), limit: int = 50, skip: int
 def query_businesses(db: Session = Depends(get_db), search: str = '', limit: int  = 50, skip:int = 0, location: str = ''):
 
 
-    results =  db.query(models.Business).filter(func.lower(models.Business.tag).like('%' +func.lower(search) + '%'), func.lower(models.Business.city).like('%' +func.lower(location) + '%')).limit(limit=limit).offset(skip).all()
+    results =  db.query(models.Business).filter(func.lower(models.Business.tag).like('%' +func.lower(search) + '%'), func.lower(models.Business.state).like('%' +func.lower(location) + '%')).limit(limit=limit).offset(skip).all()
   
 
 
