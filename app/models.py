@@ -88,6 +88,7 @@ class Business(Base):
     has_valid_cert = Column(Integer, nullable=True, default=0)
     has_valid_id = Column(Integer, nullable=True, default=0)
     level = Column(Integer, default=1, nullable=False)
+    is_vip = Column(Integer, default=0, nullable=True)
 
     subscription = relationship("Subscription")
     owner = relationship("User")

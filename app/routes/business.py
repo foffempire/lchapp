@@ -124,35 +124,7 @@ def update_map_location(loc: schemas.BusinessLocation, db: Session = Depends(get
 
  
 
-"""
-# ***************ADD/UPDATE EXPERIENCE*******************
-@router.post("/business/experience", status_code = status.HTTP_201_CREATED, response_model=schemas.Business)
-def update_experience(biz: schemas.BusinessExperience, db: Session = Depends(get_db), current_user: str = Depends(oauth2.get_current_user)):
-    query = db.query(models.Business).filter(models.Business.owner_id == current_user.id)
 
-    biz_exist = query.first()
-    if biz_exist:
-        query.update(biz.model_dump(), synchronize_session=False)
-        db.commit()
-        return query.first()
-    else:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Business not found, create a business first")
-    
-
-# ***************ADD/UPDATE ADDRESS*******************
-@router.post("/business/address", status_code = status.HTTP_201_CREATED, response_model=schemas.Business)
-def update_address(biz: schemas.BusinessAddress, db: Session = Depends(get_db), current_user: str = Depends(oauth2.get_current_user)):
-    query = db.query(models.Business).filter(models.Business.owner_id == current_user.id)
-
-    biz_exist = query.first()
-    if biz_exist:
-        query.update(biz.model_dump(), synchronize_session=False)
-        db.commit()
-        return query.first()
-    else:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Business not found, create a business first")
-    
-"""
 
 # ***************ADD/UPDATE WORKING DAYS AND TIME*******************
 @router.post("/business/schedule", status_code = status.HTTP_201_CREATED, response_model=schemas.Business)
@@ -198,7 +170,7 @@ def get_my_business(db: Session = Depends(get_db), current_user: str = Depends(o
 def get_single_business( id: int, db: Session = Depends(get_db)):
     results =  db.query(models.Business).filter(models.Business.id == id).first()
     if not results:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Business no found.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Business not found.")
     
     return results
 
@@ -216,7 +188,7 @@ def get_all_businesses(db: Session = Depends(get_db), limit: int = 50, skip: int
     """
 
     if not results:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=" NO business found.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=" No business found.")
     
     return results
 
@@ -236,7 +208,7 @@ def query_businesses(db: Session = Depends(get_db), search: str = '', limit: int
     """
     
     if not results:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Business no found.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Business not found.")
     
     insert = models.SearchHistory(search = search.lower())
     db.add(insert)
@@ -291,3 +263,54 @@ def save_businesses(business_id: int, db: Session = Depends(get_db), current_use
 def my_saved_businesses(db: Session = Depends(get_db), current_user: str = Depends(oauth2.get_current_user)):
     stmt = db.query(models.Favorite).filter(models.Favorite.user_id == current_user.id)
     return stmt.all()
+
+
+
+# ***************GET VIP BUSINESSES*******************
+@router.get("/vip", status_code=status.HTTP_200_OK, response_model=List[schemas.Business])
+def get_vip_businesses(db: Session = Depends(get_db), limit: int = 50, skip: int = 0):
+
+    results =  db.query(models.Business).join(models.Subscription, models.Business.id == models.Subscription.business_id).filter(models.Subscription.is_active == True).limit(limit).offset(skip).all()
+
+    """
+    # query only VIP businesses (needed when there are VIP subscribers)
+    results =  db.query(models.Business).filter(models.Business.is_vip == 1).limit(limit).offset(skip).all()
+    """
+
+    if not results:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=" No business found.")
+    
+    return results
+
+
+
+
+"""
+# ***************ADD/UPDATE EXPERIENCE*******************
+@router.post("/business/experience", status_code = status.HTTP_201_CREATED, response_model=schemas.Business)
+def update_experience(biz: schemas.BusinessExperience, db: Session = Depends(get_db), current_user: str = Depends(oauth2.get_current_user)):
+    query = db.query(models.Business).filter(models.Business.owner_id == current_user.id)
+
+    biz_exist = query.first()
+    if biz_exist:
+        query.update(biz.model_dump(), synchronize_session=False)
+        db.commit()
+        return query.first()
+    else:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Business not found, create a business first")
+    
+
+# ***************ADD/UPDATE ADDRESS*******************
+@router.post("/business/address", status_code = status.HTTP_201_CREATED, response_model=schemas.Business)
+def update_address(biz: schemas.BusinessAddress, db: Session = Depends(get_db), current_user: str = Depends(oauth2.get_current_user)):
+    query = db.query(models.Business).filter(models.Business.owner_id == current_user.id)
+
+    biz_exist = query.first()
+    if biz_exist:
+        query.update(biz.model_dump(), synchronize_session=False)
+        db.commit()
+        return query.first()
+    else:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Business not found, create a business first")
+    
+"""
