@@ -25,15 +25,16 @@ def add_business(biz: schemas.BusinessAbout, db: Session = Depends(get_db), curr
     random = utils.generate_unique_id(15)
 
     itag = f"{biz.name}, {biz.about}, {biz.category}"
+    iloc = f"{biz.town}, {biz.lga}"
     #details exist
     details_exist = query.first()
     if details_exist:
-        query.update(biz.model_dump(), synchronize_session=False)
+        query.update(biz.model_dump(), location = iloc, synchronize_session=False)
         query.first().tag = itag
         db.commit()
         return query.first()
     else:
-        insert = models.Business(owner_id = current_user.id, bid = random, tag = itag, **biz.model_dump())
+        insert = models.Business(owner_id = current_user.id, location = iloc,  bid = random, tag = itag, **biz.model_dump())
         db.add(insert)
         db.commit()
         db.refresh(insert)
@@ -226,7 +227,7 @@ def get_all_businesses(db: Session = Depends(get_db), limit: int = 50, skip: int
 def query_businesses(db: Session = Depends(get_db), search: str = '', limit: int  = 50, skip:int = 0, location: str = ''):
 
 
-    results =  db.query(models.Business).filter(func.lower(models.Business.tag).like('%' +func.lower(search) + '%'), func.lower(models.Business.state).like('%' +func.lower(location) + '%')).limit(limit=limit).offset(skip).all()
+    results =  db.query(models.Business).filter(func.lower(models.Business.tag).like('%' +func.lower(search) + '%'), func.lower(models.Business.location).like('%' +func.lower(location) + '%')).limit(limit=limit).offset(skip).all()
   
 
 

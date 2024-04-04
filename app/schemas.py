@@ -19,6 +19,9 @@ class User(BaseModel):
     lastname: Optional[str]
     phone: Optional[str]
     sex: Optional[str]
+    country: Optional[str]
+    state: Optional[str]
+    lga: Optional[str]
     image: Optional[str]
     is_active: bool
     date_created: datetime
@@ -32,6 +35,9 @@ class UserOut(BaseModel):
     lastname: Optional[str]
     phone: Optional[str]
     sex: Optional[str]
+    country: Optional[str]
+    state: Optional[str]
+    lga: Optional[str]
     image: Optional[str]
     is_active: bool
     date_created: datetime
@@ -42,6 +48,9 @@ class Personal(BaseModel):
     firstname: Optional[str]
     lastname: Optional[str]
     phone: Optional[str]
+    country: Optional[str]
+    state: Optional[str]
+    lga: Optional[str]
     sex: Optional[str]
 
 class PersonalImg(BaseModel):
@@ -223,10 +232,11 @@ class Business(BaseModel):
     years_of_experience: Optional[int]
     work_experience: Optional[str]
     address: Optional[str]
-    city: Optional[str]
+    town: Optional[str]
+    lga: Optional[str]
     state: Optional[str]
     country: Optional[str]
-    location: Optional[str]
+    geo: Optional[str]
     days: Optional[str]
     hour_from: Optional[str]
     hour_to: Optional[str]
@@ -254,7 +264,8 @@ class BusinessAbout(BaseModel):
     work_experience: Optional[str]
     years_of_experience: Optional[int]
     address: Optional[str]
-    city: Optional[str]
+    town: Optional[str]
+    lga: Optional[str]
     state: Optional[str]
     country: Optional[str]
 
@@ -264,7 +275,8 @@ class BusinessExperience(BaseModel):
 
 class BusinessAddress(BaseModel):
     address: Optional[str]
-    city: Optional[str]
+    town: Optional[str]
+    lga: Optional[str]
     state: Optional[str]
     country: Optional[str]
 
@@ -285,7 +297,7 @@ class BusinessImage(BaseModel):
     image: str
 
 class BusinessLocation(BaseModel):
-    location: str
+    geo: str
 
 
 class BusinessBasic(BaseModel):
