@@ -25,7 +25,8 @@ def add_business(biz: schemas.BusinessAbout, db: Session = Depends(get_db), curr
     random = utils.generate_unique_id(15)
 
     itag = f"{biz.name}, {biz.about}, {biz.category}"
-    iloc = f"{biz.town}, {biz.lga}"
+    # iloc = f"{biz.town}, {biz.lga}"
+    iloc = f"{biz.lga}"
     #details exist
     details_exist = query.first()
     if details_exist:
@@ -49,7 +50,8 @@ def update_business(biz: schemas.BusinessAbout, db: Session = Depends(get_db), c
     random = utils.generate_unique_id(15)
 
     itag = f"{biz.name}, {biz.about}, {biz.category}"
-    iloc = f"{biz.town}, {biz.lga}"
+    # iloc = f"{biz.town}, {biz.lga}"
+    iloc = f"{biz.lga}"
     #details exist
     details_exist = query.first()
     if details_exist:
