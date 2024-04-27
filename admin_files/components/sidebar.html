@@ -1,0 +1,62 @@
+<div class="sidebar">
+    <div class="sidebar-wrap">
+        <div class="logo d-flex justify-content-between align-items-center p-3">
+            <img src="{{ url_for('resources', path='/images/logo.png')}}" alt="">
+            <span class="close-sidebar-icon"><i class="bi bi-x-lg" id="close-sidebar"></i></span>
+        </div>
+        <div class="side-menu">
+            <a href="/admin/">
+                <li class="menu-item">
+                    <span class="menu-icon"><i class="bi bi-house-door"></i></span>
+                    <span class="">Dashboard</span>
+                </li>
+            </a>
+            <a href="/admin/users/">
+                <li class="menu-item">
+                    <span class="menu-icon"><i class="bi bi-people"></i></span>
+                    <span class="">Users</span>
+                </li>
+            </a>
+            <a href="/admin/businesses/">
+                <li class="menu-item">
+                    <span class="menu-icon"><i class="bi bi-journal-text"></i></span>
+                    <span class="">Businesses</span>
+                </li>
+            </a>
+            <a href="./users.html">
+                <li class="menu-item">
+                    <span class="menu-icon"><i class="bi bi-wallet"></i></span>
+                    <span class="">Subscribers</span>
+                </li>
+            </a>
+            <a href="./">
+                <li class="menu-item">
+                    <span class="menu-icon"><i class="bi bi-coin"></i></span>
+                    <span class="">Finance</span>
+                </li>
+            </a>
+            <div class="menu-section-title">Settings</div>
+            <a href="/admin_category/">
+                <li class="menu-item">
+                    <span class="menu-icon"><i class="bi bi-menu-button-wide"></i></span>
+                    <span class="">Category</span>
+                </li>
+            </a>
+            <a href="./userDetails.html">
+                <li class="menu-item">
+                    <span class="menu-icon"><i class="bi bi-person-vcard"></i></span>
+                    <span class="">Profile</span>
+                </li>
+            </a>
+            <a href="./register.html">
+                <li class="menu-item">
+                    <span class="menu-icon"><i class="bi bi-person-add"></i></span>
+                    <span class="">New admin</span>
+                </li>
+            </a>
+        </div>
+    </div>
+    <div class="sidebar-footer d-flex justify-content-center align-items-center gap-2 bgcolor">
+        <button class="footer-btn theming"><li><i class="bi bi-brightness-high"></i></li></button>
+    </div>
+</div>

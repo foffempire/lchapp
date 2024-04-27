@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users</title>
+    {% include 'components/headtag.html' %}
+</head>
+<body>
+    <section class="main-section">
+        {% include 'components/sidebar.html' %}
+        <div class="main-content">
+            {% include 'components/header.html' %}
+            <!-- CHANGE -->
+            <div class="main-wrap">
+                <div class="main-title py-2">
+                    <h3>Users</h3>
+                </div>
+                <div class="table-responsive bgcolor p-3">
+                    <table id="example" class="table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td>{{loop.index}}</td>
+                                <td>{{user.firstname}}</td>
+                                <td>{{user.lastname}}</td>
+                                <td>{{user.phone}}</td>
+                                <td>{{user.email }}</td>
+                                <td><a href="/admin/user/{{user.id}}" class="btn btn-sm btn-primary">View</a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>#</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Action</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <!-- CHANGE -->
+        </div>
+    </section>
+    
+    {% include 'components/footer.html' %}
+    <script>
+        new DataTable('#example');
+    </script>
+</body>
+</html>

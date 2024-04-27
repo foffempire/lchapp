@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% include 'components/headtag.html' %}
+    <title>Category</title>
+</head>
+<body>
+    <section class="main-section">
+        {% include 'components/sidebar.html' %}
+        <div class="main-content">
+            {% include 'components/header.html' %}
+            <!-- CHANGE -->
+            <div class="main-wrap">
+                <div class="main-title py-2">
+                    <h3>Category</h3>
+                </div>
+                <div class="action-btn d-flex justify-content-end p-3">
+                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Add Category</button>
+                </div>
+                <div class="table-responsive bgcolor p-3">
+                    <table id="example" class="table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Category Name</th>
+                                <th>Parent</th>
+                                <th>Image</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cat in category %}
+                            <tr>
+                                <td>{{loop.index}}</td>
+                                <td>{{cat.name}}</td>
+                                <td>{{pid(cat.parent_id)}}</td>
+                                <td><img src="{{ baseURL + cat.image }}" alt="" width="50"></td>
+                                <td><button class="btn btn-sm btn-primary">Edit</button></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>#</th>
+                                <th>Category Name</th>
+                                <th>Parent</th>
+                                <th>Image</th>
+                                <th>Action</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <!-- CHANGE -->
+        </div>
+    </section>
+    
+
+    <!-- MODAL -->
+    
+  <div class="modal fade text-dark" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5 " id="staticBackdropLabel">Add Category</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form id="categoryForm" enctype="multipart/form-data" method="post">
+                <div class="row mb-3">
+                    <div id="catFormAlert"></div>
+                  <label for="inputText" class="col-sm-2 col-form-label">Name</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" name="name" id="name" required="">
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label for="inputNumber" class="col-sm-2 col-form-label">Image</label>
+                  <div class="col-sm-10">
+                    <input class="form-control" type="file" id="formFile" name="image" required="">
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label">Parent Category</label>
+                  <div class="col-sm-10">
+                    <select class="form-select" aria-label="Default select example" name="parent_id" id="parent">
+                        <option value="0">None</option>
+                        {% for cat in category %}
+                        <option value="{{cat.id}}">{{cat.name}}</option>
+                        {% endfor %}
+                        </select>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label for="inputPassword" class="col-sm-2 col-form-label">Description</label>
+                  <div class="col-sm-10">
+                    <textarea class="form-control" style="height: 100px" name="description" id="descr"></textarea>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-sm-10">
+                    <button type="submit" class="btn btn-primary">Submit Form</button>
+                  </div>
+                </div>
+              </form>
+        </div>
+      </div>
+    </div>
+  </div>
+    
+  {% include 'components/footer.html' %}
+
+      <script>
+        const categoryForm = document.getElementById("categoryForm")
+        const catFormAlert = document.getElementById("my-alert")
+        const imginput = document.getElementById("formFile")
+        const baseURL = 'http://127.0.0.1:8000/'
+        // const baseURL = 'https://lchapp.com.ng/'
+        categoryForm.onsubmit = (e)=>{
+            e.preventDefault()
+            uploadFile()
+        }
+    
+        function uploadFile(){
+            var file = document.getElementById("formFile").files[0];
+            if(file){
+                var formData = new FormData();
+                formData.append('file', file);
+                fetch(baseURL+'admin_category/upload/', {
+                    method: 'POST',
+                    body: formData,
+                    header: {
+                    'accept': 'application/json',
+                    'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(response => {
+                    if(response.ok){
+                        return response.json()                    
+                    }
+                })
+                .then(data => {
+                    sendData(data.filename)
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+            }
+        }
+    
+        
+        function sendData(image){
+              // showLoader()
+            //   var formData = new FormData();
+            //   formData.append('name', document.getElementById("name").value);
+            //   formData.append('description', document.getElementById("descr").value);
+            //   formData.append('parent_id', document.getElementById("parent").value);
+            //   formData.append('image', image);
+              
+            //   fetch(baseURL+'admin_category/', {
+            //         method: 'POST',
+            //         body: formData,
+            //         header: {
+            //         'accept': 'application/json',
+            //         'Content-Type': 'multipart/form-data'
+            //         }
+            //     })
+
+
+              ajax = new XMLHttpRequest()
+              ajax.onload = ()=>{
+                  if(ajax.readyState == 4 && ajax.status == 201){
+                    console.log(ajax.responseText)
+                    //   if(parseInt(ajax.responseText)==1){
+                    //       // hideLoader()
+                    //       alert("successful");
+                    //       window.location = 'category'
+                    //   }else{
+                    //       // hideLoader()
+                    //       catFormAlert.innerHTML = `
+                    //       <div class="alert alert-danger alert-dismissible fade show" role="alert">${ajax.responseText}
+                    //       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    //       </div>`
+                    //   }
+                  }
+              }
+              ajax.open("POST", `${baseURL}admin_category/`, true)
+              const formData = new FormData(categoryForm);
+              formData.set("image", image)
+              ajax.send(JSON.stringify(formData))
+        }    
+      </script>
+        <script>
+            new DataTable('#example');
+        </script>
+</body>
+</html>

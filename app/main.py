@@ -1,6 +1,10 @@
 from fastapi import FastAPI
 from .routes import users, auth, business, category, catalog, certifications, comments, messages, rating, subscriptions, password_reset, identity, notify, external, auth_google, push
-from .admin_routes import admin_auth, admin_users, admin_business, admin_subscription, admin_details, admin_category, admin_certification, admin_id_card, admin_notify
+
+# from .admin_routes import admin_auth, admin_users, admin_business, admin_subscription, admin_details, admin_category, admin_certification, admin_id_card, admin_notify
+
+from .admin_ui import admin_auth, admin_users, admin_business, admin_subscription, admin_details, admin_category, admin_certification, admin_id_card, admin_notify
+
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -25,6 +29,7 @@ app.add_middleware(
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 app.mount("/resources", StaticFiles(directory="resources"), name="resources")
 app.mount("/templates", StaticFiles(directory="templates"), name="templates")
+app.mount("/admin_files", StaticFiles(directory="admin_files"), name="admin_files")
 
 
 

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business details</title>
+    {% include 'components/headtag.html' %}
+</head>
+<body>
+    <section class="main-section">
+        {% include 'components/sidebar.html' %}
+        <div class="main-content">
+            {% include 'components/header.html' %}
+            
+
+            <!-- change -->
+            <div class="main-wrap">
+                <div class="container">
+                    <div class="main-title py-2">
+                        <h3>Business Details</h3>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-md-4 bgcolor p-4">
+                            <div class="user-img">
+                                <img src="{{ baseURL + bizness.image }}" alt="img" class="img-fluid">
+                            </div>
+                            <hr>
+                            <p class="details"> <div class="text-primary"><small>Name</small></div> {{bizness.name}}</p>
+                            <p class="details"><div class="text-primary"><small>Address</small></div>{{bizness.location}} </p>
+                            <p class="details"><div class="text-primary"><small>Phone</small></div> {{bizness.phone}} </p>
+                            <p class="details"><div class="text-primary"><small>Email</small></div> {{bizness.owner.email}} </p>
+                        </div>
+                        <div class="col-12 col-md-8 bgcolor p-4 ">
+                            <div class="right-details">
+                                <div><span class="text-primary">Business Category</span></div>
+                                <p class="py-2">{{bizness.category}}</p>
+                                <hr>
+                            </div>
+                            <div class="right-details">
+                                <div><span class="text-primary">Business Owner</span></div>
+                                <p class="py-2">{{bizness.owner.firstname}} {{bizness.owner.lastname}}</p>
+                                <hr>
+                            </div>
+                            <div class="right-details">
+                                <div><span class="text-primary">About</span></div>
+                                <p class="py-2">{{bizness.about}}</p>
+                                <hr>
+                            </div>
+                            <div class="right-details">
+                                <div><span class="text-primary">Tags</span></div>
+                                <p class="py-2">{{bizness.tag}}</p>
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- change -->
+
+        </div>
+    </section>
+    {% include 'components/footer.html' %}
+</body>
+</html>
