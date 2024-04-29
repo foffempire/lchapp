@@ -287,3 +287,11 @@ def get_personal_details(db: Session = Depends(get_db), current_user: str = Depe
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No personal details found.")
     
     return results
+
+
+
+# ***************DELETE ACCOUNT*******************
+@router.get("/user/deleteaccount", status_code=status.HTTP_200_OK)
+def delete_account(request: Request):
+
+    return templates.TemplateResponse(request=request, name="delete_account.html")

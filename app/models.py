@@ -200,6 +200,7 @@ class Category(Base):
     image = Column(String, nullable=False, default="uploads/category/default.png")
     description = Column(String, nullable=True)
     parent_id = Column(Integer, nullable=False, default=0)
+    is_active = Column(Boolean, default=True)
 
 
 class Subscription(Base):

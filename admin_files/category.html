@@ -37,7 +37,7 @@
                                 <td>{{cat.name}}</td>
                                 <td>{{pid(cat.parent_id)}}</td>
                                 <td><img src="{{ baseURL + cat.image }}" alt="" width="50"></td>
-                                <td><button class="btn btn-sm btn-primary">Edit</button></td>
+                                <td><button class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button></td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -121,6 +121,7 @@
         // const baseURL = 'https://lchapp.com.ng/'
         categoryForm.onsubmit = (e)=>{
             e.preventDefault()
+            showLoader()
             uploadFile()
         }
     
@@ -153,44 +154,65 @@
     
         
         function sendData(image){
-              // showLoader()
-            //   var formData = new FormData();
-            //   formData.append('name', document.getElementById("name").value);
-            //   formData.append('description', document.getElementById("descr").value);
-            //   formData.append('parent_id', document.getElementById("parent").value);
-            //   formData.append('image', image);
               
-            //   fetch(baseURL+'admin_category/', {
-            //         method: 'POST',
-            //         body: formData,
-            //         header: {
-            //         'accept': 'application/json',
-            //         'Content-Type': 'multipart/form-data'
-            //         }
-            //     })
-
-
-              ajax = new XMLHttpRequest()
-              ajax.onload = ()=>{
-                  if(ajax.readyState == 4 && ajax.status == 201){
-                    console.log(ajax.responseText)
-                    //   if(parseInt(ajax.responseText)==1){
-                    //       // hideLoader()
-                    //       alert("successful");
-                    //       window.location = 'category'
-                    //   }else{
-                    //       // hideLoader()
-                    //       catFormAlert.innerHTML = `
-                    //       <div class="alert alert-danger alert-dismissible fade show" role="alert">${ajax.responseText}
-                    //       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    //       </div>`
-                    //   }
+              
+              fetch(baseURL+'admin_category/', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                      "name": document.getElementById("name").value,
+                      "image": image,
+                      "description": document.getElementById("descr").value,
+                      "parent_id": document.getElementById("parent").value
+                    }),
+                    headers: {
+                    'accept': 'application/json',
+                    'Content-Type': 'application/json'
+                    }
+                }).then(response =>{
+                  hideLoader()
+                  if(response.ok){
+                    catFormAlert.innerHTML=`<div class="alert alert-success alert-dismissible fade show" role="alert">
+                    Successful
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>`
+                  location.reload()
+                }
+                  else if(response.status == 409){
+                    catFormAlert.innerHTML=`<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    This category ready exist!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>`
+                }
+                else{
+                    catFormAlert.innerHTML=`<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    Something went wrong, try again!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>`
                   }
-              }
-              ajax.open("POST", `${baseURL}admin_category/`, true)
-              const formData = new FormData(categoryForm);
-              formData.set("image", image)
-              ajax.send(JSON.stringify(formData))
+                })
+
+
+              // ajax = new XMLHttpRequest()
+              // ajax.onload = ()=>{
+              //     if(ajax.readyState == 4 && ajax.status == 201){
+              //       console.log(ajax.responseText)
+              //       //   if(parseInt(ajax.responseText)==1){
+              //       //       // hideLoader()
+              //       //       alert("successful");
+              //       //       window.location = 'category'
+              //       //   }else{
+              //       //       // hideLoader()
+              //       //       catFormAlert.innerHTML = `
+              //       //       <div class="alert alert-danger alert-dismissible fade show" role="alert">${ajax.responseText}
+              //       //       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              //       //       </div>`
+              //       //   }
+              //     }
+              // }
+              // ajax.open("POST", `${baseURL}admin_category/`, true)
+              // const formData = new FormData(categoryForm);
+              // formData.set("image", image)
+              // ajax.send(JSON.stringify(formData))
         }    
       </script>
         <script>

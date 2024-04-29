@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LCH Admin</title>
+    {% include 'components/headtag.html' %}
+</head>
+<body>
+    <section class="main-section">
+        {% include 'components/sidebar.html' %}
+        <div class="main-content">
+            {% include 'components/header.html' %}         
+            
+
+            <!-- change -->
+            <div class="main-wrap">
+                <div class="widgets bgcolor">
+                    <div class="widget">
+                        <div class="widget-icon red">
+                            <i class="bi bi-currency-dollar"></i>
+                        </div>
+                        <div class="widget-value">12,350</div>
+                        <div class="widget-title">Order</div>
+                    </div>
+                    <div class="widget widget-border">
+                        <div class="widget-icon green">
+                            <i class="bi bi-currency-dollar"></i>
+                        </div>
+                        <div class="widget-value">12,350</div>
+                        <div class="widget-title">Order</div>
+                    </div>
+                    <div class="widget widget-border">
+                        <div class="widget-icon blue">
+                            <i class="bi bi-currency-dollar"></i>
+                        </div>
+                        <div class="widget-value">$12,350</div>
+                        <div class="widget-title">Order</div>
+                    </div>
+                    <div class="widget widget-border">
+                        <div class="widget-icon yellow">
+                            <i class="bi bi-currency-dollar"></i>
+                        </div>
+                        <div class="widget-value">12,350</div>
+                        <div class="widget-title">Order</div>
+                    </div>
+                </div>
+            </div>
+            <!-- change -->
+
+        </div>
+    </section>
+    {% include 'components/footer.html' %}
+</body>
+</html>

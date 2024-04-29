@@ -54,7 +54,11 @@ def upload_category_image(file: UploadFile):
 @router.post("/admin_category/", status_code=status.HTTP_201_CREATED)
 # def add_category(cat: schemas_admin.Category, db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
 def add_category(cat: schemas_admin.Category, db: Session = Depends(get_db) ):
-
+    stmt = db.query(models.Category).filter(models.Category.name == cat.name).first()
+    
+    if stmt:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=f'Category already exist')
+  
     insert = models.Category( **cat.model_dump())
     db.add(insert)
     db.commit()
@@ -63,14 +67,15 @@ def add_category(cat: schemas_admin.Category, db: Session = Depends(get_db) ):
 
 
 # ***************DELETE CATEGORY*******************
-@router.delete("/admin_category/{id}", status_code=status.HTTP_200_OK)
+@router.post("/admin_category/{id}", status_code=status.HTTP_200_OK)
 # def delete_category(id: int, db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
 def delete_category(id: int, db: Session = Depends(get_db) ):
-    stmt = db.query(models.Category).filter(models.Category.id == id)
-    if stmt.first() == None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'not found')
+    stmt = db.query(models.Category).filter(models.Category.id == id).first()
     
-    stmt.delete(synchronize_session=False)
+    if not stmt:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'Category not found')
+    
+    stmt.is_active = False
     db.commit()
     return {"data": "record deleted"}
 
@@ -79,7 +84,7 @@ def delete_category(id: int, db: Session = Depends(get_db) ):
 @router.get("/admin_category/", status_code=status.HTTP_200_OK)
 # def get_all_category(request: Request, db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
 def get_all_category(request: Request, db: Session = Depends(get_db)):
-    category = db.query(models.Category).all()
+    category = db.query(models.Category).filter(models.Category.is_active == True).order_by(models.Category.name).all()
     if not category:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No category found!")
     # return category
