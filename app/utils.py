@@ -16,5 +16,5 @@ def generate_unique_id(len):
     return secrets.token_hex(len)
 
 
-baseURL = 'http://127.0.0.1:8000/'
-# baseURL = 'https://lchapp.com.ng/'
+# baseURL = 'http://127.0.0.1:8000/'
+baseURL = 'https://lchapp.com.ng/'
