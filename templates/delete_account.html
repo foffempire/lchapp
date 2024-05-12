@@ -8,8 +8,17 @@
 </head>
 <body>
     <main class="py-5">
+        <header style="padding: 20px 0">
+            <div class="container">
+              <img
+                src="{{ url_for('resources', path='/images/logo.png')}}"
+                alt="logo"
+                width="70"
+              />
+            </div>
+          </header>
         <div class="container">
-            <h3 class="py-3">Delete account</h3>
+            <h3 class="py-3">Delete account{{user_id}}</h3>
             <div class="row">
                 <div class="col-12">
                     <p>Are you sure you want to delete your account? This will erase all your account data from the app. To delete your account enter your email and password</p>

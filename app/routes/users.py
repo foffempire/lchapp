@@ -295,3 +295,9 @@ def get_personal_details(db: Session = Depends(get_db), current_user: str = Depe
 def delete_account(request: Request):
 
     return templates.TemplateResponse(request=request, name="delete_account.html")
+
+
+# @router.get("/user/deleteaccount", status_code=status.HTTP_200_OK)
+# def delete_account(request: Request, current_user: str = Depends(oauth2.get_current_user)):
+
+#     return templates.TemplateResponse(request=request, name="delete_account.html", context={"user_id": current_user.id})
