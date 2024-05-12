@@ -294,7 +294,7 @@ def get_personal_details(db: Session = Depends(get_db), current_user: str = Depe
 @router.get("/user/deleteaccount", status_code=status.HTTP_200_OK)
 def delete_account(request: Request):
 
-    return templates.TemplateResponse(request=request, name="delete_account.html")
+    return templates.TemplateResponse(request=request, name="delete_account.html", context={"baseURL": baseURL})
 
 
 # @router.get("/user/deleteaccount", status_code=status.HTTP_200_OK)
