@@ -206,9 +206,11 @@ def query_businesses(db: Session = Depends(get_db), search: str = '', limit: int
     results =  db.query(models.Business).filter(func.lower(models.Business.tag).like('%' +func.lower(search) + '%'), func.lower(models.Business.location).like('%' +func.lower(location) + '%')).limit(limit=limit).offset(skip).all()
   
 
+    
 
     """
-    results =  db.query(models.Business).filter(or_(func.lower(models.Business.tag).like('%' +func.lower(search) + '%'), func.lower(models.Business.city).like('%' +func.lower(location) + '%'))).limit(limit=limit).offset(skip).all()
+    #search only subscribed businesss
+    results =  db.query(models.Business).join(models.Subscription).filter(func.lower(models.Business.tag).like('%' +func.lower(search) + '%'), func.lower(models.Business.location).like('%' +func.lower(location) + '%'), models.Subscription.is_active == True).limit(limit=limit).offset(skip).all()
     """
     
     if not results:
@@ -274,12 +276,13 @@ def my_saved_businesses(db: Session = Depends(get_db), current_user: str = Depen
 @router.get("/vip", status_code=status.HTTP_200_OK, response_model=List[schemas.Business])
 def get_vip_businesses(db: Session = Depends(get_db), limit: int = 50, skip: int = 0):
 
+    """
     results =  db.query(models.Business).join(models.Subscription, models.Business.id == models.Subscription.business_id).filter(models.Subscription.is_active == True).limit(limit).offset(skip).all()
 
     """
     # query only VIP businesses (needed when there are VIP subscribers)
     results =  db.query(models.Business).filter(models.Business.is_vip == 1).limit(limit).offset(skip).all()
-    """
+    
 
     if not results:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=" No business found.")

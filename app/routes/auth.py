@@ -20,7 +20,7 @@ def login(userlogin: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
     
 
     if not user.email_verified:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Verify your email to continue")
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail="Verify your email to continue")
 
     #create a token
     access_token = oauth2.create_access_token(data = {"user_id": user.id})

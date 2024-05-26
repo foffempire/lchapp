@@ -154,6 +154,7 @@ class CommentResponse(Comment):
     id: int
     business_id: int
     user_id: int
+    date_created: datetime
     commenter: UserOut
 
 class Commenter(BaseModel):
