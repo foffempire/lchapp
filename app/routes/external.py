@@ -25,7 +25,7 @@ def faq(request: Request):
 
 # ***************PRIVACY POLICY PAGE******************
 @router.get("/external/privacy", response_class=HTMLResponse, status_code=status.HTTP_200_OK)
-def faq(request: Request):
+def privacy(request: Request):
 
     return templates.TemplateResponse(request=request, name="privacy_policy.html", context={"baseURL": baseURL})
 

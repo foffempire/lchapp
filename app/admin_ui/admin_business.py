@@ -84,7 +84,7 @@ def count_businesses(db: Session = Depends(get_db) ):
 # ***************COUNT SUBSCRIBED BUSINESSES*******************
 @router.get("/admin/count_subscribed_businesses/", status_code=status.HTTP_200_OK)
 # def count_businesses(db: Session = Depends(get_db), admin_user: str = Depends(oauth2_admin.get_admin_user)):
-def count_businesses(db: Session = Depends(get_db) ):
+def count_subscribed_businesses(db: Session = Depends(get_db) ):
     
 
     results = db.query(models.Business).join(models.Subscription, models.Business.id == models.Subscription.business_id).filter(models.Subscription.is_active == True).all()
