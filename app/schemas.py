@@ -6,6 +6,7 @@ from typing import Optional, List, Any, Dict
 class RegisterUser(BaseModel):
     email: EmailStr
     password: str
+    referrer: Optional[str]
 
 class Password(BaseModel):
     password: str
@@ -39,6 +40,7 @@ class UserOut(BaseModel):
     state: Optional[str]
     lga: Optional[str]
     image: Optional[str]
+    referral_code: Optional[str]
     is_active: bool
     date_created: datetime
     email_verified: Optional[int]
@@ -255,6 +257,7 @@ class Business(BaseModel):
     catalog: List[CatalogResponse]
     comments: List[CommentResponse]
     certifications: List[CertResponse]
+    rating: List[Rating]
 
 
 class BusinessAbout(BaseModel):

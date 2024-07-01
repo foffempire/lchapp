@@ -27,6 +27,8 @@ class User(Base):
     verification_code = Column(Integer, default=111111, nullable=False)
     email_verified = Column(Integer, default=0, nullable=False)
     phone_verified = Column(Integer, default=0, nullable=False)
+    referral_code = Column(String, nullable=True)
+    referrer = Column(String, nullable=True)
     date_created = Column(TIMESTAMP(timezone=False), server_default=text("now()"), nullable=False)
 
 
@@ -96,6 +98,7 @@ class Business(Base):
     certifications = relationship("Certifications")
     comments = relationship("Comments")
     sub_history = relationship("SubHistory")
+    rating = relationship("Rating")
 
 
 class SearchHistory(Base):
@@ -244,3 +247,23 @@ class Notification(Base):
     message = Column(Text, nullable=False)
     is_read = Column(Integer, default=0)
     date_created = Column(TIMESTAMP(timezone=False), server_default=text("now()"), nullable=False)
+
+
+class Referral(Base):
+    __tablename__ = "referral"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, nullable=False)
+    amount_paid = Column(Float, nullable=False)
+    message = Column(Text, nullable=True)
+    date_created = Column(TIMESTAMP(timezone=False), server_default=text("now()"), nullable=False)
+
+
+
+class Settings(Base):
+    __tablename__ = "settings"
+
+    id = Column(Integer, primary_key=True, index=True)
+    item = Column(String, nullable=False)
+    is_set = Column(Integer, default=0)
+    value = Column(String, nullable=False)

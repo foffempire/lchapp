@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from .routes import users, auth, business, category, catalog, certifications, comments, messages, rating, subscriptions, password_reset, identity, notify, external, auth_google, push
+from .routes import users, auth, business, category, catalog, certifications, comments, messages, rating, subscriptions, password_reset, identity, notify, external, auth_google, push, referral
 
 # from .admin_routes import admin_auth, admin_users, admin_business, admin_subscription, admin_details, admin_category, admin_certification, admin_id_card, admin_notify
 
@@ -49,6 +49,7 @@ app.include_router(rating.router)
 app.include_router(subscriptions.router)
 app.include_router(category.router)
 app.include_router(external.router)
+app.include_router(referral.router)
 
 # admin routes
 app.include_router(admin_auth.router)

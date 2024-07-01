@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from .. import models, schemas, oauth2, utils
 from ..database import get_db
 from sqlalchemy.orm import Session 
-from ..utils import get_password_hash, verify_password, baseURL, generate_unique_id
+from ..utils import get_password_hash, verify_password, baseURL, generate_unique_id, generate_referral_code
 from fastapi.responses import JSONResponse
 import shutil
 import os
@@ -32,6 +32,8 @@ def root():
 @router.post("/register", status_code=status.HTTP_201_CREATED)
 async def register(user: schemas.RegisterUser, db: Session = Depends(get_db)):
     user.email = user.email.lower()
+    referral_code = generate_referral_code()
+
     #email exist
     email_exist = db.query(models.User).filter(models.User.email == user.email).first()
     if email_exist:
@@ -41,12 +43,16 @@ async def register(user: schemas.RegisterUser, db: Session = Depends(get_db)):
     if(len(user.password) < 6):
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail="Password length must be six characters or more")
         
+    #referral code exist
+    ref_exist = db.query(models.User).filter(models.User.referral_code == referral_code).first()
+    if ref_exist:
+        referral_code = referral_code + str(random.randint(10, 99))
 
     verification_code = random.randint(100000, 999999)
     fake_code = generate_unique_id(25)
     user.password = get_password_hash(user.password)
 
-    new_uza =  models.User(verification_code = verification_code, **user.model_dump())
+    new_uza =  models.User(verification_code = verification_code,referral_code=referral_code, **user.model_dump())
     db.add(new_uza)
     db.commit()
     db.refresh(new_uza)
@@ -82,7 +88,7 @@ async def register(user: schemas.RegisterUser, db: Session = Depends(get_db)):
     </html>
 """
 
-    await send_mail(user.email, "Confirm your email", html)
+    # await send_mail(user.email, "Confirm your email", html)
     
     #create a token
     access_token = oauth2.create_access_token(data = {"user_id": new_uza.id})
@@ -136,7 +142,7 @@ async def resend(email: str, db: Session = Depends(get_db)):
         </html>
     """
 
-        await send_mail(email, "Confirm your email", html)
+        # await send_mail(email, "Confirm your email", html)
         
         return {"data": f"Email sent to {email}"}
     else:
